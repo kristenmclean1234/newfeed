@@ -16,6 +16,7 @@ class Login(webapp2.RequestHandler):
 
         # Log the user in.
         result = authomatic.login(Webapp2Adapter(self), provider_name)
+        logging.info('RESULT IS %s' % result)
 
         if result:
             if result.user:
@@ -133,45 +134,22 @@ class Refresh(webapp2.RequestHandler):
 
 class Action(webapp2.RequestHandler):
     def get(self, provider_name):
-        # if provider_name == 'fb':
-        #     text = 'post a status on your Facebook timeline'
-        if provider_name == 'tw':
+        if provider_name == 'fb':
+            text = 'post a status on your Facebook timeline'
+        elif provider_name == 'tw':
             text = 'tweet'
 
-        # self.response.write("""
-        # <a href="..">Home</a>
-        # <p>We can {0} on your behalf.</p>
-        # <form method="post">
-        #     <input type="text" name="message" value="Have you got a bandage?" />
-        #     <input type="submit" value="Do it!">
-        # </form>
-        # """.format(text))
-        self.response.write('Your are logged in with Twitter.<br />')
+        self.response.write("""
+        <a href="..">Home</a>
+        <p>We can {0} on your behalf.</p>
+        <form method="post">
+            <input type="text" name="message" value="Have you got a bandage?" />
+            <input type="submit" value="Do it!">
+        </form>
+        """.format(text))
 
-        # We will get the user's 5 most recent tweets.
-        url = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
 
-        # You can pass a dictionary of querystring parameters.
-        response = result.provider.access(url, {'count': 5})
 
-        # Parse response.
-        if response.status == 200:
-            if type(response.data) is list:
-                # Twitter returns the tweets as a JSON list.
-                self.response.write('Your 5 most recent tweets:')
-                for tweet in response.data:
-                    text = tweet.get('text')
-                    date = tweet.get('created_at')
-
-                    self.response.write(u'<h3>{}</h3>'.format(text.replace(u'\u2013', '[???]')))
-                    self.response.write(u'Tweeted on: {}'.format(date))
-
-            elif response.data.get('errors'):
-                self.response.write(u'Damn that error: {}!'.\
-                                    format(response.data.get('errors')))
-        else:
-            self.response.write('Damn that unknown error!<br />')
-            self.response.write(u'Status: {}'.format(response.status))
     def post(self, provider_name):
         self.response.write('<a href="..">Home</a>')
 
@@ -180,29 +158,29 @@ class Action(webapp2.RequestHandler):
         serialized_credentials = self.request.cookies.get('credentials')
         user_id = self.request.cookies.get('user_id')
 
-        # if provider_name == 'fb':
-        #     # Prepare the URL for Facebook Graph API.
-        #     url = 'https://graph.facebook.com/{0}/feed'.format(user_id)
-        #
-        #     # Access user's protected resource.
-        #     response = authomatic.access(serialized_credentials, url,
-        #                                  params=dict(message=message),
-        #                                  method='POST')
-        #
-        #     # Parse response.
-        #     post_id = response.data.get('id')
-        #     error = response.data.get('error')
-        #
-        #     if error:
-        #         self.response.write('<p>Damn that error: {0}!</p>'.format(error))
-        #     elif post_id:
-        #         self.response.write('<p>You just posted a status with id ' + \
-        #                             '{0} to your Facebook timeline.<p/>'.format(post_id))
-        #     else:
-        #         self.response.write('<p>Damn that unknown error! Status code: {0}</p>'\
-        #                             .format(response.status))
-        #
-        if provider_name == 'tw':
+        if provider_name == 'fb':
+            # Prepare the URL for Facebook Graph API.
+            url = 'https://graph.facebook.com/{0}/feed'.format(user_id)
+
+            # Access user's protected resource.
+            response = authomatic.access(serialized_credentials, url,
+                                         params=dict(message=message),
+                                         method='POST')
+
+            # Parse response.
+            post_id = response.data.get('id')
+            error = response.data.get('error')
+
+            if error:
+                self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+            elif post_id:
+                self.response.write('<p>You just posted a status with id ' + \
+                                    '{0} to your Facebook timeline.<p/>'.format(post_id))
+            else:
+                self.response.write('<p>Damn that unknown error! Status code: {0}</p>'\
+                                    .format(response.status))
+
+        elif provider_name == 'tw':
 
             response = authomatic.access(serialized_credentials,
                                          url='https://api.twitter.com/1.1/statuses/update.json',
