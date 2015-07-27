@@ -29,12 +29,12 @@ class MainHandler(webapp2.RequestHandler):
         #url: http://api.nytimes.com/svc/search/v2/articlesearch.response-format?[q=search term&fq=filter-field:(filter-term)&additional-params=values]&api-key=####
         #base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.response-format?q=sports"
         #search_term =
-        url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
+        url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?q=food&"
         api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
         nyt_data_source = urlfetch.fetch(url+api_key)
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
-        for i in range(0, 10):
+        for i in range(0, len(parsed_nyt_dictionary['response']['docs'])):
             art_headline = parsed_nyt_dictionary['response']['docs'][i]['headline']
             art_lead_para = parsed_nyt_dictionary['response']['docs'][i]['lead_paragraph']
             art_url = parsed_nyt_dictionary['response']['docs'][i]['web_url']
