@@ -23,6 +23,11 @@ import os
 
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+class LoginGoogleHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('googleloginpage.html')
+        self.response.out.write(template.render())
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         #template = jinja_environment.get_template('templates/search.html')
@@ -44,5 +49,6 @@ class MainHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
+    ('/login', LoginGoogleHandler),
     ('/', MainHandler)
 ], debug=True)
