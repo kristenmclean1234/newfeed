@@ -30,14 +30,16 @@ class MainHandler(webapp2.RequestHandler):
         #base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.response-format?q=sports"
         #search_term =
         url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-        api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+        api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
         nyt_data_source = urlfetch.fetch(url+api_key)
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
-        art_headline = parsed_nyt_dictionary['response']['docs'][0]['headline']['main']
-        art_lead_para = parsed_nyt_dictionary['response']['docs'][0]['lead_paragraph']
-        art_url = parsed_nyt_dictionary['response']['docs'][0]['web_url']
-        self.response.write('<html><body><p>%s<br>%s<br>%s</p></body></html>' %(art_headline, art_lead_para, art_url))
+        #not all articles have these 3 things... what do we do?
+        for doc in parsed_nyt_dictionary['response']['docs']:
+            art_headline = doc.get('headline').get('main')
+            art_lead_para = doc.get('lead_paragraph')
+            art_url = doc.get('web_url')
+            self.response.write('<html><body><p>%s<br>%s<br>%s</p></body></html>' %(art_headline, art_lead_para, art_url))
         #self.response.write(template.render())
 
 
