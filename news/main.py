@@ -59,9 +59,14 @@ class MainHandler(webapp2.RequestHandler):
             #         image = False
             # #self.response.write('<html><body><p>%s<br>%s<br>%s</p></body></html>' %(art_headline, art_lead_para, art_url))
             self.response.write(template.render({'art_headline': art_headline, 'art_lead_para' : art_lead_para, 'art_url' : art_url }))# 'media': media, 'image' : image, 'source' : source}))
+class TrialHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/mainpage.html')
+        self.response.out.write(template.render())
 
 
 app = webapp2.WSGIApplication([
     ('/login', LoginGoogleHandler),
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/trial', TrialHandler)
 ], debug=True)
