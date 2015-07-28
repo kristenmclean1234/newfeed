@@ -24,12 +24,20 @@
         // The ID token you need to pass to your backend:
         var id_token = googleUser.getAuthResponse().id_token;
         console.log("ID Token: " + id_token);
-        window.location="http://localhost:16080/trial";
+        window.location="http://localhost:16080";
       };
     </script>
     <p> If you do not have a google account, please sign up in the following site: </p>
-    <button onclick='SignUp'> Sign up</button>
-    </script>
+
+    <div id="gSignInWrapper">
+    <div id="customBtn" class="customGPlusSignIn">
+      <span class="icon"></span>
+      <span class="buttonText"><a href="https://accounts.google.com/signup" id='signup'> Sign Up</a></span>
+    </div>
+  </div>
+
+
+
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
   <script src="/javascript/javascript.js"></script>

@@ -1,4 +1,3 @@
-
 /* This is for the Main Page */
 h1{
   text-align: center;
@@ -60,4 +59,46 @@ body{
   left: 0;
   right: 0;
   margin: auto;
+}
+
+#customBtn {
+    display: inline-block;
+    background: #4285f4;
+    color: white;
+    width: 130px;
+    left:20px;
+    white-space: nowrap;
+  }
+  #customBtn:hover {
+    cursor: pointer;
+  }
+span.label {
+    font-weight: bold;
+  }
+span.icon {
+    background: url('https://lh4.googleusercontent.com/-v0soe-ievYE/AAAAAAAAAAI/AAAAAAADJhs/etO68iVa3Hs/photo.jpg'),;
+    background-size: 35px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 42px;
+    height: 37px;
+    /*border-right: #2265d4 1px solid;*/
+  }
+span.buttonText {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    color:white;
+    text-decoration: none;
+    padding-right: 42px;
+    font-size: 12px;
+    font-weight: bold;
+    position: relative;
+    left: 13px;
+    /* Use the Roboto font that is loaded in the <head> */
+    font-family: 'Roboto', sans-serif;
+}
+#signup{
+  color:white;
+  text-decoration: none;
 }
