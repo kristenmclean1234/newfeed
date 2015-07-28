@@ -31,6 +31,16 @@ CONFIG = {
         'scope': ['user_posts'],
     },
 
+    'go': {
+
+        'class_': oauth2.Google,
+
+        'consumer_key': '881600187038-co0kp02bf3ffbfupnnrdes55ko1ued9r.apps.googleusercontent.com',
+        'consumer_secret': 'YV_GX-JJkyJXCFC7ZmOW3c2I',
+        'id': authomatic.provider_id(),
+
+    },
+
     'gae_oi': {
 
         # OpenID provider based on Google App Engine Users API.

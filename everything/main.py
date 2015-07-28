@@ -19,11 +19,13 @@ jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.di
 
 class LoginGoogleHandler(webapp2.RequestHandler):
     def get(self):
+        logging.info("Google login handler")
         template = jinja_environment.get_template('templates/googleloginpage.html')
         self.response.out.write(template.render())
 
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
+        logging.info("logging in -- PROVIDER NAME IS: %s", provider_name)
 
         result = authomatic.login(Webapp2Adapter(self), provider_name)
         self.response.set_cookie('result', str(result))
@@ -52,6 +54,53 @@ class Login(webapp2.RequestHandler):
 
 class Home(webapp2.RequestHandler):
     def get(self):
+        logging.info("home (get) handler")
+        # Retrieve values from cookies.
+        serialized_credentials = self.request.cookies.get('credentials')
+        user_id = self.request.cookies.get('user_id')
+        user_name = urllib.unquote(self.request.cookies.get('user_name', ''))
+        # error = urllib.unquote(self.request.cookies.get('error', ''))
+        logging.info("home handler found user_id: %s", user_id)
+        # if error:
+        #     self.response.write('<p>Damn that error: {0}</p>'.format(error))
+        if user_id:
+            # self.response.write('<h1>Hi {0}</h1>'.format(user_name))
+
+            if serialized_credentials:
+                # Deserialize credentials.
+                credentials = authomatic.credentials(serialized_credentials)
+                logging.info('CREDENTIALS ARE: %s' % credentials)
+
+                # valid = 'still' if credentials.valid else 'not anymore'
+                # expire_soon = 'less' if credentials.expire_soon(60 * 60 * 24) else 'more'
+                # remaining = credentials.expire_in
+                # expire_on = credentials.expiration_date
+                #
+                # self.response.write("""
+                # <p>
+                #     They are <b>{0}</b> valid and
+                #     will expire in <b>{1}</b> than one day
+                #     (in <b>{2}</b> seconds to be precise).
+                #     It will be on <b>{3}</b>.
+                # </p>
+                # """.format(valid, expire_soon, remaining, expire_on))
+
+                if credentials.valid:
+                    pass
+                else:
+                    self.response.write("""
+                    <p>
+                        Repeat the <b>login procedure</b>to get new credentials.
+                    </p>
+                    <a href="login/{0}">Refresh</a>
+                    """.format(credentials.provider_name))
+        else:
+            # self.redirect('/')
+            template = jinja_environment.get_template('templates/login.html')
+            self.response.write(template.render())
+            return
+
+
         url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
         api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
         nyt_data_source = urlfetch.fetch(url+api_key)
@@ -78,68 +127,18 @@ class Home(webapp2.RequestHandler):
 
 
         # Create links to the Login handler.
-        self.response.write('Login with <a href="login/fb">Facebook</a> or ')
-        self.response.write('<a href="login/tw">Twitter</a>')
         template = jinja_environment.get_template('templates/mainpage.html')
-        self.response.write(template.render({'articles' : articles}))
+        self.response.write(template.render({
+                                            'articles' : articles,
+                                            'name' : format(user_name),
+                                            'provider' : format(dict(fb='Facebook', tw='Twitter')[credentials.provider_name]),
+                                            'providerslug' : format(credentials.provider_name)
+                                        }))
 
-        # Retrieve values from cookies.
-        serialized_credentials = self.request.cookies.get('credentials')
-        user_id = self.request.cookies.get('user_id')
-        user_name = urllib.unquote(self.request.cookies.get('user_name', ''))
-        # error = urllib.unquote(self.request.cookies.get('error', ''))
-        #
-        # if error:
-        #     self.response.write('<p>Damn that error: {0}</p>'.format(error))
-        if user_id:
-            self.response.write('<h1>Hi {0}</h1>'.format(user_name))
-
-            if serialized_credentials:
-                # Deserialize credentials.
-                credentials = authomatic.credentials(serialized_credentials)
-                logging.info('CREDENTIALS ARE: %s' % credentials)
-
-
-                self.response.write("""
-                <p>
-                    You are logged in with <b>{0}</b> and we have your credentials.
-                </p>
-                """.format(dict(fb='Facebook', tw='Twitter')[credentials.provider_name]))
-
-                valid = 'still' if credentials.valid else 'not anymore'
-                expire_soon = 'less' if credentials.expire_soon(60 * 60 * 24) else 'more'
-                remaining = credentials.expire_in
-                expire_on = credentials.expiration_date
-
-                self.response.write("""
-                <p>
-                    They are <b>{0}</b> valid and
-                    will expire in <b>{1}</b> than one day
-                    (in <b>{2}</b> seconds to be precise).
-                    It will be on <b>{3}</b>.
-                </p>
-                """.format(valid, expire_soon, remaining, expire_on))
-
-                if credentials.valid:
-                    self.response.write("""
-                    <p>We can refresh them while they are valid.</p>
-                    <a href="refresh">OK, refresh them!</a>
-                    <p>Moreover, we can do powerful stuff with them.</p>
-                    <a href="action/{0}">Show me what you can do!</a>
-                    """.format(credentials.provider_name))
-                else:
-                    self.response.write("""
-                    <p>
-                        Repeat the <b>login procedure</b>to get new credentials.
-                    </p>
-                    <a href="login/{0}">Refresh</a>
-                    """.format(credentials.provider_name))
-
-            self.response.write('<p>We can also log you out.</p>')
-            self.response.write('<a href="logout">OK, log me out!</a>')
 
 class Refresh(webapp2.RequestHandler):
     def get(self):
+        logging.info("refresh (get) handler")
         self.response.write('<a href="..">Home</a>')
 
         serialized_credentials = self.request.cookies.get('credentials')
@@ -173,6 +172,7 @@ class Refresh(webapp2.RequestHandler):
 
 class Action(webapp2.RequestHandler):
     def any(self, provider_name):
+        logging.info("action handler got provider_name %s", provider_name)
         result = authomatic.login(Webapp2Adapter(self), provider_name)
         # result = self.request.cookies.get('result')
         logging.info('RESULT IS: %s' % result)
@@ -286,6 +286,9 @@ class Action(webapp2.RequestHandler):
                             self.response.write('Damn that unknown error!<br />')
                             self.response.write(u'Status: {}'.format(response.status))
 
+                    if result.provider.name == 'go':
+                        pass
+
     # def post(self, provider_name):
     #     self.response.write('<a href="..">Home</a>')
     #
@@ -351,6 +354,7 @@ class Action(webapp2.RequestHandler):
 
 class Logout(webapp2.RequestHandler):
     def get(self):
+        logging.info("logout handler (get)")
         # Delete cookies.
         self.response.delete_cookie('user_id')
         self.response.delete_cookie('user_name')
@@ -361,6 +365,7 @@ class Logout(webapp2.RequestHandler):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
+        logging.info("main handler (get)")
         #template = jinja_environment.get_template('templates/news.html')
         #url: http://api.nytimes.com/svc/search/v2/articlesearch.response-format?[q=search term&fq=filter-field:(filter-term)&additional-params=values]&api-key=####
         #base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.response-format?q=sports"
@@ -391,12 +396,14 @@ class MainHandler(webapp2.RequestHandler):
 
 class TrialHandler(webapp2.RequestHandler):
     def get(self):
+        logging.info("trial handler (get)")
         template = jinja_environment.get_template('templates/mainpage.html')
         self.response.out.write(template.render())
 
 
 # Create the routes.
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
+          webapp2.Route(r'/login', LoginGoogleHandler),
           webapp2.Route(r'/refresh', Refresh),
           webapp2.Route(r'/action/<:.*>', Action, handler_method='any'),
           webapp2.Route(r'/logout', Logout),

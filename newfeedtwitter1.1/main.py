@@ -56,7 +56,7 @@ class User(db.Model):
 
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
-
+        logging.info("logging in -- PROVIDER NAME IS: %s", provider_name)
         result = authomatic.login(Webapp2Adapter(self), provider_name)
         self.response.set_cookie('result', str(result))
         # user = User(result=result)
@@ -86,6 +86,7 @@ class Login(webapp2.RequestHandler):
 class Home(webapp2.RequestHandler):
     def get(self):
         # Create links to the Login handler.
+        logging.info("SERVING MAIN PAGE")
         self.response.write('Login with <a href="login/fb">Facebook</a> or ')
         self.response.write('<a href="login/tw">Twitter</a>')
 
@@ -147,6 +148,7 @@ class Home(webapp2.RequestHandler):
 
 class Refresh(webapp2.RequestHandler):
     def get(self):
+        logging.info("REFRESHING THE PAGE")
         self.response.write('<a href="..">Home</a>')
 
         serialized_credentials = self.request.cookies.get('credentials')
@@ -181,6 +183,7 @@ class Refresh(webapp2.RequestHandler):
 
 class Action(webapp2.RequestHandler):
     def any(self, provider_name):
+        logging.info("ACTION: PROVIDER NAME IS %s", provider_name)
         result = authomatic.login(Webapp2Adapter(self), provider_name)
         # result = self.request.cookies.get('result')
         logging.info('RESULT IS: %s' % result)
@@ -312,6 +315,7 @@ class Action(webapp2.RequestHandler):
 
 
     def post(self, provider_name):
+        logging.info("ACTION (POST): PROVIDER NAME IS %s", provider_name)
         self.response.write('<a href="..">Home</a>')
 
         # Retrieve the message from POST parameters and the values from cookies.
@@ -377,6 +381,7 @@ class Action(webapp2.RequestHandler):
 
 class Logout(webapp2.RequestHandler):
     def get(self):
+        logging.info("LOGGING OUT")
         # Delete cookies.
         self.response.delete_cookie('user_id')
         self.response.delete_cookie('user_name')
@@ -391,7 +396,8 @@ ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/refresh', Refresh),
           webapp2.Route(r'/action/<:.*>', Action, handler_method='any'),
           webapp2.Route(r'/logout', Logout),
-          webapp2.Route(r'/', Home)]
+          webapp2.Route(r'/', Home),
+          webapp2.Route('/login', LoginGoogleHandler)]
 
 # Instantiate the WSGI application.
 app = webapp2.WSGIApplication(ROUTES, debug=True)
