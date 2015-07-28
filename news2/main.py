@@ -62,11 +62,15 @@ class MainHandler(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/mainpage.html')
         self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
     def post(self):
-        url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="
         search_term = self.request.get('search_term')
-        logging.warning(search_term)
-        api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-        nyt_data_source = urlfetch.fetch(url+search_term+api_key)
+        if search_term == "":
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
+            api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+api_key)
+        else:
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="
+            api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+search_term+api_key)
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
         template = jinja_environment.get_template('templates/mainpage.html')
