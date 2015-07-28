@@ -20,6 +20,7 @@ import random
 from google.appengine.api import urlfetch
 import jinja2
 import os
+import logging
 
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
@@ -27,6 +28,24 @@ class LoginGoogleHandler(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/googleloginpage.html')
         self.response.out.write(template.render())
+
+def get_article_info(art_dict):
+    articles = []
+    for doc in art_dict:
+        a = {}
+        art_headline = doc.get('headline').get('main')
+        if art_headline == None:
+             art_headline = doc.get('headline').get('print_headline')
+        if art_headline == None:
+             art_headline = ''
+        a['headline'] = art_headline
+        art_lead_para = doc.get('lead_paragraph')
+        if art_lead_para == None:
+            art_lead_para = ''
+        a['lead_paragraph'] = art_lead_para
+        a['web_url'] = doc.get('web_url')
+        articles.append(a)
+    return articles
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -40,24 +59,18 @@ class MainHandler(webapp2.RequestHandler):
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
         #not all articles have these 3 things... what do we do?
-        articles = []
-        for doc in parsed_nyt_dictionary['response']['docs']:
-            a = {}
-            art_headline = doc.get('headline').get('main')
-            if art_headline == None:
-                 art_headline = doc.get('headline').get('print_headline')
-            if art_headline == None:
-                 art_headline = ''
-            a['headline'] = art_headline
-            art_lead_para = doc.get('lead_paragraph')
-            if art_lead_para == None:
-                art_lead_para = ''
-            a['lead_paragraph'] = art_lead_para
-            a['web_url'] = doc.get('web_url')
-            articles.append(a)
-        template = jinja_environment.get_template('templates/mainpage.html')    
-        self.response.write(template.render({'articles' : articles}))
-
+        template = jinja_environment.get_template('templates/mainpage.html')
+        self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+    def post(self):
+        url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="
+        search_term = self.request.get('search_term')
+        logging.warning(search_term)
+        api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+        nyt_data_source = urlfetch.fetch(url+search_term+api_key)
+        nyt_json_content = nyt_data_source.content
+        parsed_nyt_dictionary = json.loads(nyt_json_content)
+        template = jinja_environment.get_template('templates/mainpage.html')
+        self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
 
 
 class TrialHandler(webapp2.RequestHandler):
