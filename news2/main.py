@@ -25,12 +25,12 @@ jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.di
 
 class LoginGoogleHandler(webapp2.RequestHandler):
     def get(self):
-        template = jinja_environment.get_template('googleloginpage.html')
+        template = jinja_environment.get_template('templates/googleloginpage.html')
         self.response.out.write(template.render())
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        template = jinja_environment.get_template('templates/news.html')
+        #template = jinja_environment.get_template('templates/news.html')
         #url: http://api.nytimes.com/svc/search/v2/articlesearch.response-format?[q=search term&fq=filter-field:(filter-term)&additional-params=values]&api-key=####
         #base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.response-format?q=sports"
         #search_term =
@@ -55,8 +55,11 @@ class MainHandler(webapp2.RequestHandler):
             a['lead_paragraph'] = art_lead_para
             a['web_url'] = doc.get('web_url')
             articles.append(a)
+        template = jinja_environment.get_template('templates/mainpage.html')    
         self.response.write(template.render({'articles' : articles}))
-        
+
+
+
 class TrialHandler(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/mainpage.html')

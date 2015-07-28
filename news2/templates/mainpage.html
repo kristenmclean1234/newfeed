@@ -9,14 +9,19 @@
       <tr>
         <a href="#" class="myButton" id='home'>All    </a>
         <a href="#" class="myButton" id='facebook'>Facebook</a>
-        <a href="#" class="myButton" id='news'>Twitter</a>
-        <a href="#" class="myButton" id='twitter'>News</a>
+        <a href="#" class="myButton" id='twitter'>Twitter</a>
+        <a href="#" class="myButton" id='news'>News</a>
       </tr>
     </article><br><br>
 
       <ul class='FacebookPost'> This a FB post </ul>
       <ul class='TwitterPost'> This a Twitter post </ul>
-      <ul class='NewsPost'> This a News post </ul>
+      <ul class='NewsPost'>
+      {% for art in articles %}
+      <h1>{{art['headline']}}</h1>
+      <h2>{{art['lead_paragraph']}}</h2>
+      <a href="{{art['web_url']}}">Click here to view complete article</a>
+      {% endfor %}</ul>
 
     <br><br><br><br>
     <a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a>
