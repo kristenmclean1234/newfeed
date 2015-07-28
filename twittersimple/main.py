@@ -9,15 +9,11 @@ from pprint import pprint
 # Instantiate Authomatic.
 authomatic = Authomatic(config=CONFIG, secret='some random secret string')
 
-# Create a simple request handler for the login procedure.
 class Login(webapp2.RequestHandler):
-
-    # The handler must accept GET and POST http methods and
-    # Accept any HTTP method and catch the "provider_name" URL variable.
     def any(self, provider_name):
 
-        # It all begins with login.
         result = authomatic.login(Webapp2Adapter(self), provider_name)
+        logging.info('RESULT IS: %s' % result)
 
         # Do not write anything to the response if there is no result!
         if result:
@@ -92,12 +88,13 @@ class Login(webapp2.RequestHandler):
                             if type(response.data) is list:
                                 # Twitter returns the tweets as a JSON list.
                                 self.response.write('Your 5 most recent tweets:')
-                                logging.info('RESPONSE DATA IS: %s' % response.data)
+                                # logging.info('RESPONSE DATA IS: %s' % response.data)
                                 for tweet in response.data:
                                     text = tweet.get('text')
                                     date = tweet.get('created_at')
                                     name = tweet.get('user').get('name')
-                                    logging.info('Tweet ID is: %s' % name)
+                                    media = tweet.get('mediaurl')
+                                    logging.info('MEDIA URL IS: %s' % media)
                                     handle = tweet.get('user').get('screen_name')
 
                                     self.response.write(u'<h3>{0} @{1}</h3>'.format(name, handle))
@@ -120,22 +117,22 @@ class Home(webapp2.RequestHandler):
         self.response.write('Login with <a href="login/fb">Facebook</a>.<br />')
         self.response.write('Login with <a href="login/tw">Twitter</a>.<br />')
 
-        # Create OpenID form where the user can specify his claimed identifier.
-        # The library by default extracts the identifier from the "id" parameter.
-        self.response.write('''
-            <form action="login/oi">
-                <input type="text" name="id" value="me.yahoo.com" />
-                <input type="submit" value="Authenticate With OpenID">
-            </form>
-        ''')
-
-        # Create GAEOpenID form
-        self.response.write('''
-            <form action="login/gae_oi">
-                <input type="text" name="id" value="me.yahoo.com" />
-                <input type="submit" value="Authenticate With GAEOpenID">
-            </form>
-        ''')
+        # # Create OpenID form where the user can specify his claimed identifier.
+        # # The library by default extracts the identifier from the "id" parameter.
+        # self.response.write('''
+        #     <form action="login/oi">
+        #         <input type="text" name="id" value="me.yahoo.com" />
+        #         <input type="submit" value="Authenticate With OpenID">
+        #     </form>
+        # ''')
+        #
+        # # Create GAEOpenID form
+        # self.response.write('''
+        #     <form action="login/gae_oi">
+        #         <input type="text" name="id" value="me.yahoo.com" />
+        #         <input type="submit" value="Authenticate With GAEOpenID">
+        #     </form>
+        # ''')
 
 
 # Create routes.
