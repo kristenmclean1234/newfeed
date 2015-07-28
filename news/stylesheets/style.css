@@ -10,9 +10,9 @@ li{
 }
 #navmenu{
   width:100%;
-  height: 50px;
+  height: 80px;
   z-index: 0;
-  background-color: orange;
+  background-color: grey;
   text-align:center;
   left:0;
   top: 15px;
@@ -23,8 +23,28 @@ li{
 }
 body{
   text-align: center;
+  
+
 }
 #signout{
   color: black;
   bottom: 0;
+}
+  .myButton {
+	background-color: grey;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:26px;
+	padding:5px 3px;
+	text-decoration:none;
+	text-shadow:-2px -1px 50px #2f6627;
+}
+.myButton:hover {
+	background-color: blue;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
 }
