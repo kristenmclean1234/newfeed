@@ -134,7 +134,8 @@ class Home(webapp2.RequestHandler):
                                             'providerslug' : format(credentials.provider_name)
                                         }))
     def post(self):
-        search_term = self.request.get('search_term')
+        search_term = str(self.request.get('search_term')).replace(' ', '+')
+        logging.warning(search_term)
         if search_term == "":
             url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
             api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
