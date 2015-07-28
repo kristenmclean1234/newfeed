@@ -1,0 +1,18 @@
+<!DOCTYPE = html>
+<html>
+<head>
+</head>
+<body>
+  {% for art in articles %}
+  <h1>{{art['headline']}}</h1>
+  <h2>{{art['lead_paragraph']}}</h2>
+  <a href="{{art['web_url']}}">Click here to view complete article</a>
+  {% endfor %}
+  <!-- <p>{{media}}<p>
+  {% if image %}
+  <img src = "source">
+  {% endif %} -->
+  <br>
+  <br>
+</body>
+</html>
