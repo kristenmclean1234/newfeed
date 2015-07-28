@@ -9,6 +9,9 @@ import logging
 from config import CONFIG
 from google.appengine.ext import db
 from google.appengine.api import users
+import pprint
+import twitter
+
 def setup_logger(logger):
     logger.setLevel(logging.DEBUG)
 
@@ -198,6 +201,7 @@ class Action(webapp2.RequestHandler):
                 # Login procedure finished with an error.
                 self.response.write(u'<h2>Damn that error: {}</h2>'.format(result.error.message))
 
+
             elif result.user:
                 # Hooray, we have the user!
 
@@ -210,6 +214,11 @@ class Action(webapp2.RequestHandler):
                 self.response.write(u'<h1>Hi {}</h1>'.format(result.user.name))
                 self.response.write(u'<h2>Your id is: {}</h2>'.format(result.user.id))
                 self.response.write(u'<h2>Your email is: {}</h2>'.format(result.user.email))
+                logging.info('CREDENTIALS ARE: %s' % result.user.credentials)
+                credentials = result.user.credentials
+                logging.info('CREDENTIALS VARIABLE VALUE IS: %s' % credentials)
+                # self.response.set_cookie('credentials', credentials)
+
 
                 # Seems like we're done, but there's more we can do...
 
@@ -224,6 +233,7 @@ class Action(webapp2.RequestHandler):
                         # We will access the user's 5 most recent statuses.
                         url = 'https://graph.facebook.com/{}?fields=feed.limit(10)'
                         url = url.format(result.user.id)
+                        logging.info("USER ID IS: %s" % result.user.id)
 
                         # Access user's protected resource.
                         response = result.provider.access(url)
