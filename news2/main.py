@@ -56,8 +56,14 @@ class MainHandler(webapp2.RequestHandler):
             a['web_url'] = doc.get('web_url')
             articles.append(a)
         self.response.write(template.render({'articles' : articles}))
+        
+class TrialHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/mainpage.html')
+        self.response.out.write(template.render())
 
 app = webapp2.WSGIApplication([
     ('/login', LoginGoogleHandler),
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/trial', TrialHandler)
 ], debug=True)
