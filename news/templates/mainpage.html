@@ -7,16 +7,20 @@
   <body>
     <article id="navmenu">
       <tr>
-        <td > Home --  </td>
-        <td > Facebook --  </td>
-        <td > Twitter -- </td>
-        <td > News</td><br>
+        <td > <button id='home' type='button'> Home </button>  </td>
+        <td><button id='facebook' type='button'> Show only FB </button></td>
+        <td><button id='news' type='button'> Show only News </button></td>
+        <td><button id='twitter' type='button'> Show only Twitter </button></td>
       </tr>
     </article>
-    <li>
-      <ul> This a post </ul>
-    </li>
+
+      <ul class='FacebookPost'> This a FB post </ul>
+      <ul class='TwitterPost'> This a Twitter post </ul>
+      <ul class='NewsPost'> This a News post </ul>
+
     <br><br><br><br>
     <a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a>
   </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+  <script src="/javascript/javascript.js"></script>
 </html>
