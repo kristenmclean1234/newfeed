@@ -4,9 +4,9 @@
 </head>
 <body>
   {% for art in articles %}
-  <h1>art['headline']</h1>
-  <h2>art['lead_para']</h2>
-  <a href="art['url]">Click here to view complete article</a>
+  <h1>{{art['headline']}}</h1>
+  <h2>{{art['lead_paragraph']}}</h2>
+  <a href="{{art['web_url']}}">Click here to view complete article</a>
   {% endfor %}
   <!-- <p>{{media}}<p>
   {% if image %}
