@@ -66,6 +66,14 @@ body{
 	top:1px;
 }
 
+#logins img{
+  display:inline-block;
+  height: 80px;
+  width:80px;
+  border-radius: 6px;
+}
+
+
 /* This is for the Login page */
 .g-signin2{
   width: 100px;
