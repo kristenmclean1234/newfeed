@@ -45,15 +45,22 @@ class Profile(ndb.Model):
     # THE ACTUAL METHOD OF LOGGING IN AND GETTING A USERNAME AND USER ID
     # IT USES RESULT AS A STORAGE FOR IT AND PUTS IT INTO A COOKIE
     # INSTEAD OF COOKIES, PUT IT INTO A DATASTORE
+
+result = {}
+serialized_credentials = {}
+user_id = {}
+user_name = {}
+
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
         logging.info("logging in -- PROVIDER NAME IS: %s", provider_name)
-        result = {}
         Profile.get_by_id
-        self.response.set_cookie(provider_name)
         last_provider = self.request.cookies.get(provider_name)
+        global result
         result[provider_name] = authomatic.login(Webapp2Adapter(self), provider_name)
         self.response.set_cookie(str(provider_name) + '_result', str(result[provider_name]))
+        self.response.set_cookie(provider_name)
+
         # user = User(result=result)
         # user.put()
         pprint.pprint('RESULT IS %s' % result[provider_name])
@@ -97,14 +104,16 @@ def get_article_info(art_dict):
         articles.append(a)
     return articles
 
+
+
 class Home(webapp2.RequestHandler):
     def any(self):
         logging.info("home (get) handler")
         # Retrieve values from cookies.
+        global serialized_credentials
+        global user_id
+        global user_name
         provider_name = 'fb'
-        serialized_credentials = {}
-        user_id = {}
-        user_name = {}
         serialized_credentials[provider_name] = self.request.cookies.get(str(provider_name)+'_credentials')
         user_id[provider_name] = self.request.cookies.get(str(provider_name)+ '_user_id')
         user_name[provider_name] = urllib.unquote(self.request.cookies.get(str(provider_name) + '_user_name', ''))
