@@ -1,0 +1,63 @@
+
+/* This is for the Main Page */
+h1{
+  text-align: center;
+}
+li{
+  text-align: center;
+  border-style: double;
+  border-width: thick;
+  position: relative;
+  top:50px;
+}
+#navmenu{
+  width:100%;
+  list-style: none;
+  z-index: 0;
+  background-color: grey;
+  text-align:center;
+  left:0;
+  top: 15px;
+  font-size: 30px;
+  position: relative;
+  opacity: 0.5;
+  /*display: inline;*/
+}
+body{
+  text-align: center;
+
+
+}
+#signout{
+  color: black;
+  bottom: 0;
+}
+.myButton {
+	background-color: grey;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:26px;
+	padding:5px 3px;
+	text-decoration:none;
+	text-shadow:-2px -1px 50px #2f6627;
+  text-align: center;
+}
+.myButton:hover {
+	background-color: blue;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+/* This is for the Login page */
+.g-signin2{
+  width: 100px;
+  top:0;
+  bottom: 10;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
