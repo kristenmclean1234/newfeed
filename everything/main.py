@@ -50,7 +50,8 @@ class Login(webapp2.RequestHandler):
         logging.info("logging in -- PROVIDER NAME IS: %s", provider_name)
         result = {}
         Profile.get_by_id
-        last_provider = self.response.set_cookie(provider_name)
+        self.response.set_cookie(provider_name)
+        last_provider = self.request.cookies.get(provider_name)
         result[provider_name] = authomatic.login(Webapp2Adapter(self), provider_name)
         self.response.set_cookie(str(provider_name) + '_result', str(result[provider_name]))
         # user = User(result=result)
@@ -100,7 +101,7 @@ class Home(webapp2.RequestHandler):
     def any(self):
         logging.info("home (get) handler")
         # Retrieve values from cookies.
-        provider_name = last_provider
+        provider_name = 'fb'
         serialized_credentials = {}
         user_id = {}
         user_name = {}
