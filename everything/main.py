@@ -212,19 +212,22 @@ class Home(webapp2.RequestHandler):
 
                     # Access user's protected resource.
                     fbresponse = result['fb'].provider.access(urlf)
-
+                    logging.info(fbresponse)
                     if fbresponse.status == 200:
                         # Parse response.
                         statuses = fbresponse.data.get('feed').get('data')
                         error = fbresponse.data.get('error')
-
                         if error:
                             self.response.write(u'Damn that error: {}!'.format(error))
                         elif statuses:
                             fstatuses = []
                             for message in statuses:
                                 s = {}
-                                s['text'] = message.get('message')
+                                logging.info("MESSAGE FOR FACEBOOK IS: %s", message)
+                                text = message.get('message')
+                                if text == None:
+                                    text = message.get('story')
+                                s['text'] = text
                                 s['date'] = message.get('created_time')
                                 fstatuses.append(s)
 
@@ -282,7 +285,6 @@ class Home(webapp2.RequestHandler):
         nyt_data_source = urlfetch.fetch(url+api_key)
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
-        #not all articles have these 3 things... what do we do?
 
         logging.info('STATUSES ARE: %s', fstatuses)
 
@@ -300,7 +302,7 @@ class Home(webapp2.RequestHandler):
                                         }))
     def post(self):
         search_term = str(self.request.get('search_term')).replace(' ', '+')
-        logging.warning(search_term)
+        logging.info("search_term")
         if search_term == "":
             url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
             api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
