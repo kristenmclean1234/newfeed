@@ -73,13 +73,14 @@ body{
   border-radius: 6px;
 }
 
-
-/* This is for the Login page */
-.g-signin2{
-  width: 100px;
-  top:0;
-  bottom: 10;
-  left: 0;
-  right: 0;
-  margin: auto;
+.allpost{
+  margin-left: 100px;
+  margin-right: 100px;
+  text-align: justify;
+}
+h2{
+  font-size: 18;
+}
+#bottomlogout{
+  text-align: center;
 }
