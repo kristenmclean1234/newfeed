@@ -25,15 +25,15 @@
         <input type="submit" value="Search">
       </form>
       </article><br><br>
-
-        <ul class='FacebookPost'> This a FB post
+    </div><div class='allpost'>
+        <ul class='FacebookPost'>
         {% for status in statuses %}
         <p><h2>{{status['text']}}</h2><br>
           Posted on {{status['date']}}</p>
         {% endfor %} </ul>
 
         <ul class='TwitterPost'>
-          This a Twitter post
+
         {% for tweet in tweets %}
         <p><h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
           <h2>{{tweet['text']}}</h2><br>
@@ -47,9 +47,10 @@
         {% endfor %} </ul>
 
       <br><br><br><br>
-      <a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br>
-      <a href="logout">Log out from Twitter and Facebook</a>
     </div>
+      <!--<a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br>-->
+      <a id ='bottomlogout' href="logout">Log out from Twitter and Facebook</a>
+    
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
   <script src="/javascript/javascript.js"></script>
