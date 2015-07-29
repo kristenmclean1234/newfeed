@@ -1,0 +1,49 @@
+/*login page*/
+@import url(http://fonts.googleapis.com/css?family=Convergence);
+.background-image {
+  display: block;
+  background-image: url("../images/skyline.jpg");
+  width: 1200px;
+  height: 800px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  -webkit-filter: blur(3px);
+}
+#content{
+  display: block;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  text-align: center;
+  margin: 100px auto;
+  padding: 5px;
+  width: 350px;
+  height: 350px;
+  background-color: rgba(255,255,255,0.4);
+  border-radius: 6px;
+  font-family: Convergence;
+  font-size: 30px;
+  color: white;
+}
+
+#content h1{
+  margin-top: 5px;
+  padding: 6px;
+  margin-bottom: 15px;
+}
+
+#content p{
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+#logins img{
+  display:inline-block;
+  height: 80px;
+  width:80px;
+  border-radius: 6px;
+}
