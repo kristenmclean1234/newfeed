@@ -52,6 +52,24 @@ class Login(webapp2.RequestHandler):
 
             self.redirect('/')
 
+def get_article_info(art_dict):
+    articles = []
+    for doc in art_dict:
+        a = {}
+        art_headline = doc.get('headline').get('main')
+        if art_headline == None:
+             art_headline = doc.get('headline').get('print_headline')
+        if art_headline == None:
+             art_headline = ''
+        a['headline'] = art_headline
+        art_lead_para = doc.get('lead_paragraph')
+        if art_lead_para == None:
+            art_lead_para = ''
+        a['lead_paragraph'] = art_lead_para
+        a['web_url'] = doc.get('web_url')
+        articles.append(a)
+    return articles
+
 class Home(webapp2.RequestHandler):
     def any(self):
         logging.info("home (get) handler")
@@ -232,29 +250,14 @@ class Home(webapp2.RequestHandler):
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
         #not all articles have these 3 things... what do we do?
-        articles = []
-        for doc in parsed_nyt_dictionary['response']['docs']:
-            a = {}
-            art_headline = doc.get('headline').get('main')
-            if art_headline == None:
-                 art_headline = doc.get('headline').get('print_headline')
-            if art_headline == None:
-                 art_headline = ''
-            a['headline'] = art_headline
-            art_lead_para = doc.get('lead_paragraph')
-            if art_lead_para == None:
-                art_lead_para = ''
-            a['lead_paragraph'] = art_lead_para
-            a['web_url'] = doc.get('web_url')
-            articles.append(a)
-
 
         logging.info('STATUSES ARE: %s', fstatuses)
 
         # Create links to the Login handler.
         template = jinja_environment.get_template('templates/mainpage.html')
+        # self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
         self.response.write(template.render({
-                                            'articles' : articles,
+                                            'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
                                             'name' : format(user_name),
                                             'provider' : format(dict(fb='Facebook', tw='Twitter')[credentials.provider_name]),
                                             'providerslug' : format(credentials.provider_name),
@@ -262,6 +265,24 @@ class Home(webapp2.RequestHandler):
                                             'statuses' : fstatuses
 
                                         }))
+    def post(self):
+        search_term = str(self.request.get('search_term')).replace(' ', '+')
+        logging.warning(search_term)
+        if search_term == "":
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
+            api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+api_key)
+        else:
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="
+            api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+search_term+api_key)
+        nyt_json_content = nyt_data_source.content
+        parsed_nyt_dictionary = json.loads(nyt_json_content)
+        #template = jinja_environment.get_template('templates/mainpage.html')
+        #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+        # Create links to the Login handler.
+        template = jinja_environment.get_template('templates/mainpage.html')
+        self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
 
 
 class Refresh(webapp2.RequestHandler):
@@ -489,37 +510,6 @@ class Logout(webapp2.RequestHandler):
 
         # Redirect home.
         self.redirect('./')
-
-# class MainHandler(webapp2.RequestHandler):
-#     def get(self):
-#         logging.info("main handler (get)")
-#         #template = jinja_environment.get_template('templates/news.html')
-#         #url: http://api.nytimes.com/svc/search/v2/articlesearch.response-format?[q=search term&fq=filter-field:(filter-term)&additional-params=values]&api-key=####
-#         #base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.response-format?q=sports"
-#         #search_term =
-#         url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-#         api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-#         nyt_data_source = urlfetch.fetch(url+api_key)
-#         nyt_json_content = nyt_data_source.content
-#         parsed_nyt_dictionary = json.loads(nyt_json_content)
-#         #not all articles have these 3 things... what do we do?
-#         articles = []
-#         for doc in parsed_nyt_dictionary['response']['docs']:
-#             a = {}
-#             art_headline = doc.get('headline').get('main')
-#             if art_headline == None:
-#                  art_headline = doc.get('headline').get('print_headline')
-#             if art_headline == None:
-#                  art_headline = ''
-#             a['headline'] = art_headline
-#             art_lead_para = doc.get('lead_paragraph')
-#             if art_lead_para == None:
-#                 art_lead_para = ''
-#             a['lead_paragraph'] = art_lead_para
-#             a['web_url'] = doc.get('web_url')
-#             articles.append(a)
-#         template = jinja_environment.get_template('templates/mainpage.html')
-#         self.response.write(template.render({'articles' : articles}))
 
 class TrialHandler(webapp2.RequestHandler):
     def get(self):
