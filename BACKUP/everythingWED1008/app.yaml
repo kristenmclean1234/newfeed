@@ -15,7 +15,6 @@ handlers:
 - url: /images
   static_dir: images
 - url: .*
-  # login: required
   script: main.app
 
 libraries:
