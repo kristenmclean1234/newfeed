@@ -238,7 +238,7 @@ class Home(webapp2.RequestHandler):
 
                 # Access user's protected resource.
                 fbresponse = result['fb'].provider.access(urlf)
-
+                logging.info('FB RESPONSE IS: %s', fbresponse)
                 if fbresponse.status == 200:
                     # Parse response.
                     statuses = fbresponse.data.get('feed').get('data')
