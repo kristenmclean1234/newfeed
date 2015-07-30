@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $('#searchbar').hide();
     $("#facebook").click(function(){
         $(".TwitterPost").hide();
         $(".NewsPost").hide();
