@@ -318,9 +318,18 @@ class Home(webapp2.RequestHandler):
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
 
-        logging.info('STATUSES ARE: %s', fstatuses)
+        logging.info('FACEBOOK STATUSES ARE: %s', fstatuses)
 
             # RENDER THE TEMPLATE ------------------
+        template = jinja_environment.get_template('templates/mainpage.html')
+        self.response.write(template.render({
+                                            'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
+                                            'name' : format(user_name[provider_name]),
+                                            'provider' : provider_says,
+                                            'providerslug' : format(credentials[provider_name].provider_name),
+                                            'tweets' : tweets,
+                                            'statuses' : fstatuses,
+                                        }))
     def post(self):
         search_term = str(self.request.get('search_term')).replace(' ', '+')
         logging.warning(search_term)
@@ -347,7 +356,7 @@ class Home(webapp2.RequestHandler):
         self.response.write(template.render({
                                             'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
                                             'name' : format(user_name[provider_name]),
-                                            'provider' : format(dict(fb='Facebook', tw='Twitter')[credentials[provider_name].provider_name]),
+                                            'provider' : provider_says,
                                             'providerslug' : format(credentials[provider_name].provider_name),
                                             'tweets' : tweets,
                                             'statuses' : fstatuses
