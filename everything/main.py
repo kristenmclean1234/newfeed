@@ -58,10 +58,9 @@ class Login(webapp2.RequestHandler):
         if result:
             if result.user:
                 result.user.update()
-                self.response.write('<h1>Hi {0}</h1>'.format(result.user.name))
-
                 # Save the user name and ID to cookies that we can use it in other handlers.
                 self.response.set_cookie('user_id', result.user.id)
+                logging.info('SET COOKIE WITH VALUE OF: %s', result.user.id)
                 self.response.set_cookie('user_name', urllib.quote(result.user.name))
 
                 if result.user.credentials:
