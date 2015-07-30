@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
   </head>
@@ -12,6 +11,10 @@
     </div>
     <h1 id='welcome'>Welcome to NewFeed, {{name}}</h1>
     <p id='logged'>You are logged in with <b>{{provider}}</b>.</p>
+    <div id="logins">
+      <a href="login/fb"><img src="../images/fbbutton.png"></a>
+      <a href="login/tw"><img src="../images/twbutton.png"></a>
+    </div>
     <a href="/" method='post'>SHOW MY POSTS PLEASE</a><br><br>
     <article id="navmenu">
       <tr>
@@ -29,14 +32,14 @@
     <div class='allpost'>
         <ul class='FacebookPost'>
         {% for status in statuses %}
-        <div class = "post", "fbp"><h2>{{status['text']}}</h2><br>
+        <div class = "post fbp"><h2>{{status['text']}}</h2><br>
           Posted on {{status['date']}}</div>
         {% endfor %} </ul>
 
         <ul class='TwitterPost'>
 
         {% for tweet in tweets %}
-          <div class = "post", "twp">
+          <div class = "post twp">
             <h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
             <h2>{{tweet['text']}}</h2><br>
             Posted on {{tweet['date']}}
@@ -45,7 +48,7 @@
 
         <ul class='NewsPost'>
         {% for art in articles %}
-          <div class = "post", "np">
+          <div class = "post np">
               <a href="{{art['web_url']}}"><h1>{{art['headline']}}</h1></a>
               <h2>{{art['lead_paragraph']}}</h2>
           </div>
