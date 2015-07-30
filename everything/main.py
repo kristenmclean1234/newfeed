@@ -155,6 +155,7 @@ class Home(webapp2.RequestHandler):
                 if credentials['fb'].valid:
                     provider_names['fb'] = credentials['fb'].provider_name
                     result['fb'] = authomatic.login(Webapp2Adapter(self), provider_names['fb'])
+                    logging.info('FACEBOOK RESULT IS ABSOLUTELY: %s',result['fb'])
 
                 else:
                     self.response.write("""
@@ -224,6 +225,8 @@ class Home(webapp2.RequestHandler):
         serialized_credentials['fb'] = self.request.cookies.get('fb_credentials')
         tweets = []
         fstatuses = []
+        # user_id['tw'] = self.request.cookies.get('tw_user_id')
+        # user_id['fb'] = self.request.cookies.get('fb_user_id')
         logging.info("RESULT FOR TWITTER IS: %s", result['tw'])
         logging.info("RESULT FOR FACEBOOK IS: %s", result['fb'])
 
