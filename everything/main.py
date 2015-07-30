@@ -321,6 +321,11 @@ class Home(webapp2.RequestHandler):
 
         logging.info('FACEBOOK STATUSES ARE: %s', fstatuses)
 
+        if user_name['fb'] != None:
+            provider_name = 'fb'
+        else:
+            provider_name = 'tw'
+
             # RENDER THE TEMPLATE ------------------
         template = jinja_environment.get_template('templates/mainpage.html')
         self.response.write(template.render({
