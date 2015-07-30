@@ -148,6 +148,9 @@ h2{
   width: 500px;
   text-align: left;
   padding: 10px;
+  position: relative;
+  left: calc(50% - 300px);
+  margin: 10px;
 }
 .twp{
     background-color: rgba(64, 153, 255, 0.5);
