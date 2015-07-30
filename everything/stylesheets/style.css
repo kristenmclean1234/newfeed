@@ -1,5 +1,9 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans);
 /* This is for the Main Page */
+/*h1{
+  text-align: center;
+  background-color: white;
+}*/
 .background {
   display: block;
   height: 100%;
@@ -18,10 +22,6 @@ h1{
   text-align: center;
 
 }*/
-body{
-  text-align: center;
-}
-
 
 li{
   text-align: center;
@@ -32,39 +32,86 @@ li{
 }
 #navmenu{
   width:100%;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
   list-style: none;
   z-index: 0;
-  background-color: grey;
   text-align:center;
-  left:0;
+  left:-200px;
   top: 15px;
   font-size: 30px;
   position: relative;
   opacity: 0.5;
   /*display: inline;*/
 }
-#signout{
-  color: black;
-  bottom: 0;
+body{
+  text-align: center;
+  background-color: #EBF5FF;
+
 }
+#signout{
+  background: #297ACC;
+  background-color: #297ACC;
+  -webkit-border-radius: 6;
+  -moz-border-radius: 6;
+  border-radius: 6px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 5px 10px 5px 10px;
+  margin: 0px 10px 0px 0px;
+  text-decoration: none;
+}
+
+#welcome {
+  position: relative;
+  top: 50px;
+  left: -300px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+}
+#logged {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  position: relative;
+  top: 25px;
+  left: -300px;
+
+}
+
 .myButton {
-	background-color: grey;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16;
 	display:inline-block;
 	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:26px;
+	color:#297ACC;
 	padding:5px 3px;
 	text-decoration:none;
-	text-shadow:-2px -1px 50px #2f6627;
   text-align: center;
+  border-bottom-style: solid;
+  border-bottom-color: #3399FF;
 }
 .myButton:hover {
-	background-color: blue;
 }
 .myButton:active {
 	position:relative;
 	top:1px;
+}
+.top {
+  display: inline;
+  background-color: #3399FF;
+  position: fixed;
+  left: 0;
+  top: -5px;
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  border-bottom-color: #47A3FF;
+  box-shadow: 0px 0px 10px 0px grey;
+  padding: 15px 0px 15px 0px;
+  text-align: right;
+  width: 100%;
+  z-index: 1;
 }
 
 /* This is for the Login page */
