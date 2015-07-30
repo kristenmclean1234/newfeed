@@ -14,20 +14,21 @@
         <a href="#" class="myButton" id='twitter'>Twitter</a>
         <a href="#" class="myButton" id='news'>News</a>
       </tr>
-    <form method="post">
+    <form id='searchbar' method="post">
       <input type="text" name="search_term" placeholder="Search...">
       <input type="submit" value="Search">
     </form>
     </article><br><br>
 
       <ul class='FacebookPost'>
+        This is a FB Post
       {% for status in statuses %}
       <p><h2>{{status['text']}}</h2><br>
         Posted on {{status['date']}}</p>
       {% endfor %} </ul>
 
       <ul class='TwitterPost'>
-        This a Twitter post
+
       {% for tweet in tweets %}
       <p><h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
         <h2>{{tweet['text']}}</h2><br>
