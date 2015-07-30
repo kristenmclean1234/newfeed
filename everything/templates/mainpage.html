@@ -29,14 +29,14 @@
     <div class='allpost'>
         <ul class='FacebookPost'>
         {% for status in statuses %}
-        <div class = "post"><h2>{{status['text']}}</h2><br>
+        <div class = "post", "fbp"><h2>{{status['text']}}</h2><br>
           Posted on {{status['date']}}</div>
         {% endfor %} </ul>
 
         <ul class='TwitterPost'>
 
         {% for tweet in tweets %}
-          <div class = "post">
+          <div class = "post", "twp">
             <h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
             <h2>{{tweet['text']}}</h2><br>
             Posted on {{tweet['date']}}
@@ -45,7 +45,7 @@
 
         <ul class='NewsPost'>
         {% for art in articles %}
-          <div class = "post">
+          <div class = "post", "np">
               <a href="{{art['web_url']}}"><h1>{{art['headline']}}</h1></a>
               <h2>{{art['lead_paragraph']}}</h2>
           </div>

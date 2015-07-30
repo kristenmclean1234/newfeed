@@ -101,6 +101,15 @@ h2{
   width: 500px;
   text-align: left;
 }
+.twp{
+    border-bottom:solid #4099FF;
+}
+.fbp{
+    border-bottom:solid #3B5998;
+}
+.np{
+    border-bottom:solid #FFF;
+}
 a{
   -o-transition:.5s;
   -ms-transition:.5s;
