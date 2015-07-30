@@ -1,4 +1,4 @@
-
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
 /* This is for the Main Page */
 .background {
   display: block;
@@ -13,16 +13,10 @@
   right: 0;
   z-index: -1;
 }
-
-/*div {
-    -webkit-columns: 100px 3;
-    -moz-columns: 100px 3;
-    columns: 100px 3;
-}*/
-
+/*
 h1{
   text-align: center;
-}
+}*/
 li{
   text-align: center;
   border-style: double;
@@ -45,8 +39,6 @@ li{
 }
 body{
   text-align: center;
-
-
 }
 #signout{
   color: black;
@@ -72,12 +64,39 @@ body{
 	top:1px;
 }
 
-/* This is for the Login page */
-.g-signin2{
-  width: 100px;
-  top:0;
-  bottom: 10;
-  left: 0;
-  right: 0;
-  margin: auto;
+#logins img{
+  display:inline-block;
+  height: 80px;
+  width:80px;
+  border-radius: 6px;
 }
+
+.allpost{
+  margin-left: 100px;
+  margin-right: 100px;
+  /*text-align: justify;*/
+}
+h2{
+  font-size: 18;
+}
+#bottomlogout{
+  text-align: center;
+}
+
+.post{
+  font-family: Open Sans;
+  width: 500px;
+  text-align: left;
+}
+a{
+  -o-transition:.5s;
+  -ms-transition:.5s;
+  -moz-transition:.5s;
+  -webkit-transition:.5s;
+  /* ...and now for the proper property */
+  transition:.5s;
+}
+a:link { color: #000000; text-decoration: none}
+a:visited { color: #000000; text-decoration: none}
+a:hover {color: #39F; text-decoration: none}
+a:active { color: #000000; text-decoration: none}
