@@ -8,22 +8,20 @@
     <!-- <a class='top' id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br> -->
     <div class='top'>
       <a id='signout' href="logout">Sign out</a>
-      <div id="logins">
-        <a href="login/fb"><img src="../images/fbbutton.png"></a>
-        <a href="login/tw"><img src="../images/twbutton.png"></a>
-
-      </div>
     </div>
     <h1 id='welcome'>Welcome to NewFeed, {{name}}</h1>
     <p id='logged'>You are logged in with <b>{{provider}}</b>.</p>
+    <div id="logins">
+      <a href="login/fb"><img src="../images/fbbutton.png"></a>
+      <a href="login/tw"><img src="../images/twbutton.png"></a>
+    </div>
+    <a href="/" method='post'>SHOW MY POSTS PLEASE</a><br><br>
     <article id="navmenu">
       <tr>
         <a href="#" class="myButton" id='home'>All    </a>
         <a href="#" class="myButton" id='facebook'>Facebook</a>
         <a href="#" class="myButton" id='twitter'>Twitter</a>
         <a href="#" class="myButton" id='news'>News</a>
-        <a href="/" class='myButton' method='post'>Refresh</a>
-
       </tr>
     <form id='searchbar' method="post">
       <input type="text" name="search_term" placeholder="Search...">
@@ -39,7 +37,21 @@
         {% endfor %} </ul>
 
         <ul class='TwitterPost'>
-
+          <div class='post twp'>
+            <h1> NPR <i> @NPR </i> </h1><br>
+            <h2> Md. Governor Will Reportedly Close Baltimore Jail In Corruption Scandal </h2><br>
+            Posted on July 30, 2015 3:05 pm
+          </div>
+          <div class='post twp'>
+            <h1> Sincerely Tumblr <i> @SincerelyTumblr </i> </h1><br>
+            <h2> the world is a better place with you in it </h2><br>
+            Posted on July 30, 2015 1:03 pm
+          </div>
+          <div class='post twp'>
+            <h1> CNN <i> @CNN </i> </h1><br>
+            <h2> Airpots are hubs for human trafficking. Here are 7 warning signs you can look out for: cnn.it/1lu5iel</h2><br>
+            Posted on July 30, 2015 12:45 pm
+          </div>
         {% for tweet in tweets %}
           <div class = "post twp">
             <h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
@@ -59,6 +71,7 @@
       <br><br><br><br>
     </div>
       <!--<a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br>-->
+      <a id ='bottomlogout' href="logout">Log out from Twitter and Facebook</a>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
   <script src="/javascript/javascript.js"></script>
