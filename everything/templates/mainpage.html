@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
   </head>
   <body>
-    <h1>Welcome to NewFeed, {{name}}</h1>
+    <h1>Welcome to Newfeed, {{name}}</h1>
     <p>You are logged in with <b>{{provider}}</b> and we have your credentials.</p>
     <a href="/">SHOW MY POSTS PLEASE</a><br><br>
     <article id="navmenu">
@@ -23,7 +23,7 @@
       <ul class='FacebookPost'>
         This is a FB Post
       {% for status in statuses %}
-      <p><h2>{{status['text']}}</h2><br>
+      <p><h2> {{status['text']}}</h2>
         Posted on {{status['date']}}</p>
       {% endfor %} </ul>
 

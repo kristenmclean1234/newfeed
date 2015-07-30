@@ -208,7 +208,11 @@ class Home(webapp2.RequestHandler):
                                 fstatuses = []
                                 for message in statuses:
                                     s = {}
-                                    s['text'] = message.get('message')
+                                    logging.info("Message for Facebook is: %s", message)
+                                    text = message.get('message')
+                                    if text == None:
+                                        text = message.get('story')
+                                    s['text'] = text
                                     s['date'] = message.get('created_time')
                                     fstatuses.append(s)
 
