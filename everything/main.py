@@ -224,7 +224,8 @@ class Home(webapp2.RequestHandler):
         serialized_credentials['fb'] = self.request.cookies.get('fb_credentials')
         tweets = []
         fstatuses = []
-        logging.info("RESULT FOR BOTH IS: %s", result)
+        logging.info("RESULT FOR TWITTER IS: %s", result['tw'])
+        logging.info("RESULT FOR FACEBOOK IS: %s", result['fb'])
 
         if result['tw'] or result['fb']:
                     # FACEBOOK PRINT STATUSES ---------------
@@ -261,7 +262,7 @@ class Home(webapp2.RequestHandler):
                             # date = message.get('created_time')
                 else:
                     self.response.write('Oh that unknown error!<br />')
-                    self.response.write(u'Status: {}'.format(response.status))
+                    self.response.write(u'Status: {}'.format(fbresponse.status))
 
                 logging.info('CREDENTIALS FACEBOOK VARIABLE VALUE IS: %s' % credentials['fb'])
 
