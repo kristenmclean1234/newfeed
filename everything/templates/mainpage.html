@@ -9,16 +9,24 @@
     <!-- <a class='top' id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br> -->
     <div class='top'>
       <a id='signout' href="logout">Sign out</a>
+      <div id="logins">
+        <a href="login/fb"><img src="../images/fbbutton.png"></a>
+        <a href="login/tw"><img src="../images/twbutton.png"></a>
+
+      </div>
     </div>
     <h1 id='welcome'>Welcome to NewFeed, {{name}}</h1>
     <p id='logged'>You are logged in with <b>{{provider}}</b>.</p>
-    <a href="/" method='post'>SHOW MY POSTS PLEASE</a><br><br>
+
+    <br><br>
     <article id="navmenu">
       <tr>
         <a href="#" class="myButton" id='home'>All    </a>
         <a href="#" class="myButton" id='facebook'>Facebook</a>
         <a href="#" class="myButton" id='twitter'>Twitter</a>
         <a href="#" class="myButton" id='news'>News</a>
+        <a href="/" class='myButton' method='post'>Refresh</a>
+
       </tr>
     <form id='searchbar' method="post">
       <input type="text" name="search_term" placeholder="Search...">
@@ -54,7 +62,6 @@
       <br><br><br><br>
     </div>
       <!--<a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br>-->
-      <a id ='bottomlogout' href="logout">Log out from Twitter and Facebook</a>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
   <script src="/javascript/javascript.js"></script>
