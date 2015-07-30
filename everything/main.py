@@ -484,12 +484,12 @@ class Action(webapp2.RequestHandler):
     #         error = response.data.get('error')
     #
     #         if error:
-    #             self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+    #             self.response.write('<p>Oh that error: {0}!</p>'.format(error))
     #         elif post_id:
     #             self.response.write('<p>You just posted a status with id ' + \
     #                                 '{0} to your Facebook timeline.<p/>'.format(post_id))
     #         else:
-    #             self.response.write('<p>Damn that unknown error! Status code: {0}</p>'\
+    #             self.response.write('<p>Oh that unknown error! Status code: {0}</p>'\
     #                                 .format(response.status))
     #
     #     elif provider_name == 'tw':
@@ -503,7 +503,7 @@ class Action(webapp2.RequestHandler):
     #         tweet_id = response.data.get('id')
     #
     #         if error:
-    #             self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+    #             self.response.write('<p>Oh that error: {0}!</p>'.format(error))
     #         elif tweet_id:
     #             self.response.write("""
     #             <p>
@@ -513,7 +513,7 @@ class Action(webapp2.RequestHandler):
     #         else:
     #             self.response.write("""
     #             <p>
-    #                 Damn that unknown error! Status code: {0}
+    #                 Oh that unknown error! Status code: {0}
     #             </p>
     #             """.format(response.status))
     #
@@ -529,9 +529,12 @@ class Logout(webapp2.RequestHandler):
     def get(self):
         logging.info("logout handler (get)")
         # Delete cookies.
-        self.response.delete_cookie('user_id')
-        self.response.delete_cookie('user_name')
-        self.response.delete_cookie('credentials')
+        self.response.delete_cookie('fb_user_id')
+        self.response.delete_cookie('fb_user_name')
+        self.response.delete_cookie('fb_credentials')
+        self.response.delete_cookie('tw_user_id')
+        self.response.delete_cookie('tw_user_name')
+        self.response.delete_cookie('tw_credentials')
 
         # Redirect home.
         self.redirect('./')
@@ -547,7 +550,7 @@ class TrialHandler(webapp2.RequestHandler):
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/login', LoginGoogleHandler),
           webapp2.Route(r'/refresh', Refresh),
-          webapp2.Route(r'/action/<:.*>', Action, handler_method='any'),
+        #   webapp2.Route(r'/action/<:.*>', Action, handler_method='any'),
           webapp2.Route(r'/logout', Logout),
           webapp2.Route(r'/', Home, handler_method='any')]
 

@@ -4,6 +4,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
   </head>
   <body>
+
     <h1>Welcome to Newfeed, {{name}}</h1>
     <p>You are logged in with <b>{{provider}}</b> and we have your credentials.</p>
     <a href="/">SHOW MY POSTS PLEASE</a><br><br>
@@ -27,23 +28,60 @@
         Posted on {{status['date']}}</p>
       {% endfor %} </ul>
 
-      <ul class='TwitterPost'>
+    <div class="background"></div>
+    <div id = "content">
+      <h1>Welcome to NewFeed, {{name}}</h1>
+      <p>You are logged in with <b>{{provider}}</b> and we have your credentials.</p>
+      <div id="logins">
+        <a href="login/fb"><img src="../images/fbbutton.png"></a>
+        <a href="login/tw"><img src="../images/twbutton.png"></a>
+      </div>
+      <a href="/">SHOW MY POSTS PLEASE</a><br><br>
+      <article id="navmenu">
+        <tr>
+          <a href="#" class="myButton" id='home'>All    </a>
+          <a href="#" class="myButton" id='facebook'>Facebook</a>
+          <a href="#" class="myButton" id='twitter'>Twitter</a>
+          <a href="#" class="myButton" id='news'>News</a>
+        </tr>
+      <form id='searchbar' method="post">
+        <input type="text" name="search_term" placeholder="Search...">
+        <input type="submit" value="Search">
+      </form>
+      </article><br><br>
+    </div>
+    <div class='allpost'>
+        <ul class='FacebookPost'>
+        {% for status in statuses %}
+        <div class = "post"><h2>{{status['text']}}</h2><br>
+          Posted on {{status['date']}}</div>
+        {% endfor %} </ul>
 
-      {% for tweet in tweets %}
-      <p><h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
-        <h2>{{tweet['text']}}</h2><br>
-        Posted on {{tweet['date']}}</p>
-      {% endfor %} </ul>
+        <ul class='TwitterPost'>
 
-      <ul class='NewsPost'>
-      {% for art in articles %}
-      <a href="{{art['web_url']}}"><h1>{{art['headline']}}</h1></a>
-      <h2>{{art['lead_paragraph']}}</h2>
-      {% endfor %} </ul>
 
-    <br><br><br><br>
-    <a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br>
-    <a href="logout">Log out from Twitter and Facebook</a>
+        {% for tweet in tweets %}
+          <div class = "post">
+            <h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
+            <h2>{{tweet['text']}}</h2><br>
+            Posted on {{tweet['date']}}
+          </div>
+        {% endfor %} </ul>
+
+        <ul class='NewsPost'>
+        {% for art in articles %}
+          <div class = "post">
+              <a href="{{art['web_url']}}"><h1>{{art['headline']}}</h1></a>
+              <h2>{{art['lead_paragraph']}}</h2>
+          </div>
+
+        {% endfor %} </ul>
+
+      <br><br><br><br>
+    </div>
+      <!--<a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br>-->
+      <a id ='bottomlogout' href="logout">Log out from Twitter and Facebook</a>
+
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
   <script src="/javascript/javascript.js"></script>
