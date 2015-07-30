@@ -249,7 +249,11 @@ class Home(webapp2.RequestHandler):
                         fstatuses = []
                         for message in statuses:
                             s = {}
-                            s['text'] = message.get('message')
+                            logging.info("MESSAGE FOR FACEBOOK IS: %s", message)
+                            text = message.get('message')
+                            if text == None:
+                                text = message.get('story')
+                            s['text'] = text
                             s['date'] = message.get('created_time')
                             fstatuses.append(s)
 
@@ -260,7 +264,6 @@ class Home(webapp2.RequestHandler):
                     self.response.write(u'Status: {}'.format(response.status))
 
                 logging.info('CREDENTIALS FACEBOOK VARIABLE VALUE IS: %s' % credentials['fb'])
-
 
             # TWITER PRINT TWEETS -------------------------
             if result['tw']:
@@ -314,26 +317,18 @@ class Home(webapp2.RequestHandler):
         nyt_data_source = urlfetch.fetch(url+api_key)
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
-        #not all articles have these 3 things... what do we do?
 
         logging.info('STATUSES ARE: %s', fstatuses)
 
             # RENDER THE TEMPLATE ------------------
-        template = jinja_environment.get_template('templates/mainpage.html')
-        # self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
-
-        logging.info("TEMPLATE CREDENTIALS ARE: %s", credentials)
-        self.response.write(template.render({
-                                            'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
-                                            'name' : format(user_name[provider_name]),
-                                            'provider' : provider_says,
-                                            'providerslug' : format(credentials[provider_name].provider_name),
-                                            'tweets' : tweets,
-                                            'statuses' : fstatuses
-                                        }))
     def post(self):
         search_term = str(self.request.get('search_term')).replace(' ', '+')
         logging.warning(search_term)
+
+
+        search_term = self.request.get('search_term')
+        logging.info(search_term)
+        logging.info("hey")
         if search_term == "":
             url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
             api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
@@ -348,8 +343,16 @@ class Home(webapp2.RequestHandler):
         #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
         # Create links to the Login handler.
         template = jinja_environment.get_template('templates/mainpage.html')
-        self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+        # self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+        self.response.write(template.render({
+                                            'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
+                                            'name' : format(user_name[provider_name]),
+                                            'provider' : format(dict(fb='Facebook', tw='Twitter')[credentials[provider_name].provider_name]),
+                                            'providerslug' : format(credentials[provider_name].provider_name),
+                                            'tweets' : tweets,
+                                            'statuses' : fstatuses
 
+                                        }))
 
 class Refresh(webapp2.RequestHandler):
     def get(self):

@@ -32,7 +32,7 @@
 
 #content h1{
   margin-top: 5px;
-  padding: 6px;
+  /*padding: 6px;*/
   margin-bottom: 15px;
 }
 
@@ -46,4 +46,11 @@
   height: 80px;
   width:80px;
   border-radius: 6px;
+}
+#logo{
+  height: 100px;
+  width:200px;
+  position: relative;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
 }
