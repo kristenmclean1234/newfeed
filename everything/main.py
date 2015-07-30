@@ -269,11 +269,11 @@ class Home(webapp2.RequestHandler):
 
 
             # NEWS ------------------------------
-        url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-        api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-        nyt_data_source = urlfetch.fetch(url+api_key)
-        nyt_json_content = nyt_data_source.content
-        parsed_nyt_dictionary = json.loads(nyt_json_content)
+        # url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
+        # api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+        # nyt_data_source = urlfetch.fetch(url+api_key)
+        # nyt_json_content = nyt_data_source.content
+        # parsed_nyt_dictionary = json.loads(nyt_json_content)
         #not all articles have these 3 things... what do we do?
 
         logging.info('STATUSES ARE: %s', fstatuses)
@@ -281,6 +281,23 @@ class Home(webapp2.RequestHandler):
             # RENDER THE TEMPLATE ------------------
         template = jinja_environment.get_template('templates/mainpage.html')
         # self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+        search_term = str(self.request.get('search_term')).replace(' ', '+')
+        logging.warning(search_term)
+        if search_term == "":
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?sort=newest&"
+            api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+api_key)
+        else:
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?sort=newest&q="
+            api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+search_term+api_key)
+        nyt_json_content = nyt_data_source.content
+        parsed_nyt_dictionary = json.loads(nyt_json_content)
+        #template = jinja_environment.get_template('templates/mainpage.html')
+        #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+        # Create links to the Login handler.
+        #template = jinja_environment.get_template('templates/mainpage.html')
+        #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
         self.response.write(template.render({
                                             'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
                                             'name' : format(user_name),
@@ -290,25 +307,6 @@ class Home(webapp2.RequestHandler):
                                             'statuses' : fstatuses
 
                                         }))
-    def post(self):
-        search_term = str(self.request.get('search_term')).replace(' ', '+')
-        logging.warning(search_term)
-        if search_term == "":
-            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-            api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-            nyt_data_source = urlfetch.fetch(url+api_key)
-        else:
-            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="
-            api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-            nyt_data_source = urlfetch.fetch(url+search_term+api_key)
-        nyt_json_content = nyt_data_source.content
-        parsed_nyt_dictionary = json.loads(nyt_json_content)
-        #template = jinja_environment.get_template('templates/mainpage.html')
-        #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
-        # Create links to the Login handler.
-        template = jinja_environment.get_template('templates/mainpage.html')
-        self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
-
 
 class Refresh(webapp2.RequestHandler):
     def get(self):
