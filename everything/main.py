@@ -156,7 +156,6 @@ class Home(webapp2.RequestHandler):
         fstatuses = []
         if result:
             # If there is result, the login procedure is over and we can write to response.
-            self.response.write('<a href="..">Home</a>')
 
             if result.error:
                 # Login procedure finished with an error.
@@ -309,7 +308,6 @@ class Home(webapp2.RequestHandler):
 class Refresh(webapp2.RequestHandler):
     def get(self):
         logging.info("refresh (get) handler")
-        self.response.write('<a href="..">Home</a><br>')
 
         serialized_credentials = self.request.cookies.get('credentials')
         credentials = authomatic.credentials(serialized_credentials)
@@ -356,7 +354,6 @@ class Action(webapp2.RequestHandler):
 
         if result:
             # If there is result, the login procedure is over and we can write to response.
-            self.response.write('<a href="..">Home</a>')
 
             if result.error:
                 # Login procedure finished with an error.

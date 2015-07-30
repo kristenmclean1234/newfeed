@@ -2,11 +2,16 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
   </head>
   <body>
-    <h1>Welcome to NewFeed, {{name}}</h1>
-    <p>You are logged in with <b>{{provider}}</b> and we have your credentials.</p>
-    <a href="/">SHOW MY POSTS PLEASE</a><br><br>
+    <!-- <a class='top' id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br> -->
+    <div class='top'>
+      <a id='signout' href="logout">Sign out</a>
+    </div>
+    <h1 id='welcome'>Welcome to NewFeed, {{name}}</h1>
+    <p id='logged'>You are logged in with <b>{{provider}}</b>.</p>
+    <a href="/" method='post'>SHOW MY POSTS PLEASE</a><br><br>
     <article id="navmenu">
       <tr>
         <a href="#" class="myButton" id='home'>All    </a>
@@ -42,8 +47,6 @@
       {% endfor %} </ul>
 
     <br><br><br><br>
-    <a id ='signout' href='https://plus.google.com/'> Sign out from your Google+ page</a><br>
-    <a href="logout">Log out from Twitter and Facebook</a>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
   <script src="/javascript/javascript.js"></script>
