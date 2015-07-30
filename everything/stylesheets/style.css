@@ -104,11 +104,12 @@ body{
   position: fixed;
   left: 0;
   top: -5px;
+  height: 30px;
   border-bottom-style: solid;
   border-bottom-width: thin;
   border-bottom-color: #47A3FF;
   box-shadow: 0px 0px 10px 0px grey;
-  padding: 15px 0px 15px 0px;
+  padding: 15px 0px 0px 0px;
   text-align: right;
   width: 100%;
   z-index: 1;
@@ -126,8 +127,12 @@ body{
 
 #logins img{
   display:inline-block;
-  height: 80px;
-  width:80px;
+  height: 30px;
+  width:30px;
+  top: -27px;
+  left: -110px;
+  position: relative;
+  /*left: 300px;*/
   border-radius: 6px;
 }
 
