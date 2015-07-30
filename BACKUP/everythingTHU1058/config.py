@@ -22,7 +22,7 @@ CONFIG = {
 
         # Facebook is AuthorizationProvider too.
         'consumer_key': '1596489813951598',
-        'consumer_secret': '0bb58a5f081d84e12d28dd1bf6f6f2a1',
+        'consumer_secret': '2623f1d1a2fe9141035d77ef53bff7e0',
         'id': authomatic.provider_id(),
 
         # We need the "publish_stream" scope to post to users timeline,

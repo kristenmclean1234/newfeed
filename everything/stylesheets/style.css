@@ -1,5 +1,6 @@
 
 /* This is for the Main Page */
+<<<<<<< HEAD
 .background {
   display: block;
   height: 100%;
@@ -19,6 +20,8 @@ div {
     -moz-columns: 100px 3; /* Firefox */
     columns: 100px 3;
 }
+=======
+>>>>>>> 08e84d126cad934d4c30f01da52f3851c682e47e
 h1{
   text-align: center;
 }
@@ -71,21 +74,12 @@ body{
 	top:1px;
 }
 
-#logins img{
-  display:inline-block;
-  height: 80px;
-  width:80px;
-  border-radius: 6px;
-}
-
-.allpost{
-  margin-left: 100px;
-  margin-right: 100px;
-  text-align: justify;
-}
-h2{
-  font-size: 18;
-}
-#bottomlogout{
-  text-align: center;
+/* This is for the Login page */
+.g-signin2{
+  width: 100px;
+  top:0;
+  bottom: 10;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
