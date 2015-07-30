@@ -157,6 +157,11 @@ h2{
   left: calc(50% - 300px);
   margin: 10px;
 }
+.allpost{
+  -webkit-column-count: 2; /* Chrome, Safari, Opera */
+  -moz-column-count: 2; /* Firefox */
+  column-count: 2;
+}
 .twp{
     background-color: rgba(64, 153, 255, 0.5);
     border-bottom:solid #4099FF;
