@@ -207,7 +207,11 @@ class Home(webapp2.RequestHandler):
                                 fstatuses = []
                                 for message in statuses:
                                     s = {}
-                                    s['text'] = message.get('message')
+                                    logging.info("Message for Facebook is: %s", message)
+                                    text = message.get('message')
+                                    if text == None:
+                                        text = message.get('story')
+                                    s['text'] = text
                                     s['date'] = message.get('created_time')
                                     fstatuses.append(s)
 
@@ -264,11 +268,11 @@ class Home(webapp2.RequestHandler):
 
 
             # NEWS ------------------------------
-        url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-        api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-        nyt_data_source = urlfetch.fetch(url+api_key)
-        nyt_json_content = nyt_data_source.content
-        parsed_nyt_dictionary = json.loads(nyt_json_content)
+        # url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
+        # api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+        # nyt_data_source = urlfetch.fetch(url+api_key)
+        # nyt_json_content = nyt_data_source.content
+        # parsed_nyt_dictionary = json.loads(nyt_json_content)
         #not all articles have these 3 things... what do we do?
 
         logging.info('STATUSES ARE: %s', fstatuses)
@@ -276,6 +280,23 @@ class Home(webapp2.RequestHandler):
             # RENDER THE TEMPLATE ------------------
         template = jinja_environment.get_template('templates/mainpage.html')
         # self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+        search_term = str(self.request.get('search_term')).replace(' ', '+')
+        logging.warning(search_term)
+        if search_term == "":
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?sort=newest&"
+            api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+api_key)
+        else:
+            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?sort=newest&q="
+            api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
+            nyt_data_source = urlfetch.fetch(url+search_term+api_key)
+        nyt_json_content = nyt_data_source.content
+        parsed_nyt_dictionary = json.loads(nyt_json_content)
+        #template = jinja_environment.get_template('templates/mainpage.html')
+        #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
+        # Create links to the Login handler.
+        #template = jinja_environment.get_template('templates/mainpage.html')
+        #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
         self.response.write(template.render({
                                             'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
                                             'name' : format(user_name),
@@ -285,25 +306,6 @@ class Home(webapp2.RequestHandler):
                                             'statuses' : fstatuses
 
                                         }))
-    def post(self):
-        search_term = str(self.request.get('search_term')).replace(' ', '+')
-        logging.warning(search_term)
-        if search_term == "":
-            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-            api_key ="api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-            nyt_data_source = urlfetch.fetch(url+api_key)
-        else:
-            url =  "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="
-            api_key ="&api-key=7169254a2f887db9ab1c3c629fed79d3:16:72574373"
-            nyt_data_source = urlfetch.fetch(url+search_term+api_key)
-        nyt_json_content = nyt_data_source.content
-        parsed_nyt_dictionary = json.loads(nyt_json_content)
-        #template = jinja_environment.get_template('templates/mainpage.html')
-        #self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
-        # Create links to the Login handler.
-        template = jinja_environment.get_template('templates/mainpage.html')
-        self.response.write(template.render({'articles' : get_article_info(parsed_nyt_dictionary['response']['docs'])}))
-
 
 class Refresh(webapp2.RequestHandler):
     def get(self):
@@ -477,12 +479,12 @@ class Action(webapp2.RequestHandler):
     #         error = response.data.get('error')
     #
     #         if error:
-    #             self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+    #             self.response.write('<p>Oh that error: {0}!</p>'.format(error))
     #         elif post_id:
     #             self.response.write('<p>You just posted a status with id ' + \
     #                                 '{0} to your Facebook timeline.<p/>'.format(post_id))
     #         else:
-    #             self.response.write('<p>Damn that unknown error! Status code: {0}</p>'\
+    #             self.response.write('<p>Oh that unknown error! Status code: {0}</p>'\
     #                                 .format(response.status))
     #
     #     elif provider_name == 'tw':
@@ -496,7 +498,7 @@ class Action(webapp2.RequestHandler):
     #         tweet_id = response.data.get('id')
     #
     #         if error:
-    #             self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+    #             self.response.write('<p>Oh that error: {0}!</p>'.format(error))
     #         elif tweet_id:
     #             self.response.write("""
     #             <p>
@@ -506,7 +508,7 @@ class Action(webapp2.RequestHandler):
     #         else:
     #             self.response.write("""
     #             <p>
-    #                 Damn that unknown error! Status code: {0}
+    #                 Oh that unknown error! Status code: {0}
     #             </p>
     #             """.format(response.status))
     #
@@ -522,9 +524,12 @@ class Logout(webapp2.RequestHandler):
     def get(self):
         logging.info("logout handler (get)")
         # Delete cookies.
-        self.response.delete_cookie('user_id')
-        self.response.delete_cookie('user_name')
-        self.response.delete_cookie('credentials')
+        self.response.delete_cookie('fb_user_id')
+        self.response.delete_cookie('fb_user_name')
+        self.response.delete_cookie('fb_credentials')
+        self.response.delete_cookie('tw_user_id')
+        self.response.delete_cookie('tw_user_name')
+        self.response.delete_cookie('tw_credentials')
 
         # Redirect home.
         self.redirect('./')
@@ -540,7 +545,7 @@ class TrialHandler(webapp2.RequestHandler):
 ROUTES = [webapp2.Route(r'/login/<:.*>', Login, handler_method='any'),
           webapp2.Route(r'/login', LoginGoogleHandler),
           webapp2.Route(r'/refresh', Refresh),
-          webapp2.Route(r'/action/<:.*>', Action, handler_method='any'),
+        #   webapp2.Route(r'/action/<:.*>', Action, handler_method='any'),
           webapp2.Route(r'/logout', Logout),
           webapp2.Route(r'/', Home, handler_method='any')]
 
