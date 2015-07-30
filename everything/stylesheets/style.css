@@ -1,6 +1,5 @@
 
 /* This is for the Main Page */
-<<<<<<< HEAD
 .background {
   display: block;
   height: 100%;
@@ -15,13 +14,12 @@
   z-index: -1;
 }
 
-div {
-    -webkit-columns: 100px 3; /* Chrome, Safari, Opera */
-    -moz-columns: 100px 3; /* Firefox */
+/*div {
+    -webkit-columns: 100px 3;
+    -moz-columns: 100px 3;
     columns: 100px 3;
-}
-=======
->>>>>>> 08e84d126cad934d4c30f01da52f3851c682e47e
+}*/
+
 h1{
   text-align: center;
 }
