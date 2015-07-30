@@ -46,23 +46,20 @@ class Profile(ndb.Model):
     # IT USES RESULT AS A STORAGE FOR IT AND PUTS IT INTO A COOKIE
     # INSTEAD OF COOKIES, PUT IT INTO A DATASTORE
 
-result = {}
-serialized_credentials = {}
-user_id = {}
-user_name = {}
+
 
 class Login(webapp2.RequestHandler):
     def any(self, provider_name):
-        logging.info("logging in -- PROVIDER NAME IS: %s", provider_name)
-        Profile.get_by_id
-        last_provider = self.request.cookies.get(provider_name)
-        global result
+
+        result = {'fb': None, 'tw': None}
+        user = users.get_current_user()
         result[provider_name] = authomatic.login(Webapp2Adapter(self), provider_name)
         self.response.set_cookie(str(provider_name) + '_result', str(result[provider_name]))
-        self.response.set_cookie(provider_name)
+        self.response.set_cookie('providername', provider_name)
 
         # user = User(result=result)
         # user.put()
+        logging.info("logging in -- PROVIDER NAME IS: %s", provider_name)
         pprint.pprint('RESULT IS %s' % result[provider_name])
 
         if result[provider_name]:
@@ -108,27 +105,73 @@ def get_article_info(art_dict):
 
 class Home(webapp2.RequestHandler):
     def any(self):
-        logging.info("home (get) handler")
-        # Retrieve values from cookies.
-        global serialized_credentials
-        global user_id
-        global user_name
-        provider_name = 'fb'
-        serialized_credentials[provider_name] = self.request.cookies.get(str(provider_name)+'_credentials')
-        user_id[provider_name] = self.request.cookies.get(str(provider_name)+ '_user_id')
-        user_name[provider_name] = urllib.unquote(self.request.cookies.get(str(provider_name) + '_user_name', ''))
+        # Retrieve values from datastore.
+        # user = users.get_current_user()
+        # current_profile = Profile.get_by_id(user.user_id())
+        # if current_profile == None:
+        #     current_profile = Profile(name = user.nickname(), id = user.user_id())
+        #     current_profile.put()
+        # provider_name = None
+        # current_profile = Profile(name = user.nickname(), id = user.user_id())
+        # serialized_credentials[provider_name] = self.request.cookies.get(str(provider_name)+'_credentials')
+        # user_id[provider_name] = self.request.cookies.get(str(provider_name)+ '_user_id')
+        # user_name[provider_name] = urllib.unquote(self.request.cookies.get(str(provider_name) + '_user_name', ''))
         # error = urllib.unquote(self.request.cookies.get('error', ''))
-        logging.info("home handler found user_id: %s", user_id[provider_name])
-        # if error:
-        #     self.response.write('<p>Damn that error: {0}</p>'.format(error))
-        if user_id[provider_name]:
-            # self.response.write('<h1>Hi {0}</h1>'.format(user_name))
 
-            if serialized_credentials[provider_name]:
+        provider_name = self.request.cookies.get('providername')
+
+        serialized_credentials = {}
+        serialized_credentials['tw'] = self.request.cookies.get('tw_credentials')
+        serialized_credentials['fb'] = self.request.cookies.get('fb_credentials')
+
+        result = {}
+        result['fb'] = self.request.cookies.get('fb_credentials')
+        result['tw'] = self.request.cookies.get('tw_credentials')
+
+        credentials = {}
+        provider_names = {}
+        response = {}
+        user_name = {}
+        user_id = {}
+        user_id['tw'] = self.request.cookies.get('tw_user_id')
+        user_id['fb'] = self.request.cookies.get('fb_user_id')
+
+
+        logging.info("home handler found Twitter user_id: %s", user_id['tw'])
+        logging.info("home handler found Facebook user_id: %s", user_id['fb'])
+        logging.info("HOME (GET) HANDLER")
+        logging.info("USER ID IS: %s",user_id)
+
+        if user_id['fb']:
+            # self.response.write('<h1>Hi {0}</h1>'.format(user_name))
+            user_name['fb'] = urllib.unquote(self.request.cookies.get('fb_user_name', ''))
+
+
+            if serialized_credentials['fb']:
                 # Deserialize credentials.
-                credentials = {}
-                credentials[provider_name] = authomatic.credentials(serialized_credentials[provider_name])
-                logging.info('CREDENTIALS ARE: %s' % credentials[provider_name])
+                credentials['fb'] = authomatic.credentials(serialized_credentials['fb'])
+                logging.info('SPECIFIC FACEBOOK CREDENTIALS ARE: %s' % credentials['fb'])
+
+                if credentials['fb'].valid:
+                    provider_names['fb'] = credentials['fb'].provider_name
+                    result['fb'] = authomatic.login(Webapp2Adapter(self), provider_names['fb'])
+
+                else:
+                    self.response.write("""
+                    <p>
+                        Repeat the <b>login procedure</b>to get new credentials.
+                    </p>
+                    <a href="login/{0}">Refresh</a>
+                    """.format(credentials['fb'].provider_name))
+
+        if user_id['tw']:
+            # self.response.write('<h1>Hi {0}</h1>'.format(user_name))
+            user_name['tw'] = urllib.unquote(self.request.cookies.get('tw_user_name', ''))
+
+            if serialized_credentials['tw']:
+                # Deserialize credentials.
+                credentials['tw'] = authomatic.credentials(serialized_credentials['tw'])
+                logging.info('SPECIFIC TWITTER CREDENTIALS ARE: %s' % credentials['tw'])
 
                 # valid = 'still' if credentials.valid else 'not anymore'
                 # expire_soon = 'less' if credentials.expire_soon(60 * 60 * 24) else 'more'
@@ -144,139 +187,128 @@ class Home(webapp2.RequestHandler):
                 # </p>
                 # """.format(valid, expire_soon, remaining, expire_on))
 
-                if credentials[provider_name].valid:
-                    pass
+                if credentials['tw'].valid:
+                    provider_names['tw'] = credentials['tw'].provider_name
+                    result['tw'] = authomatic.login(Webapp2Adapter(self), provider_names['tw'])
+
                 else:
                     self.response.write("""
                     <p>
                         Repeat the <b>login procedure</b>to get new credentials.
                     </p>
                     <a href="login/{0}">Refresh</a>
-                    """.format(credentials[provider_name].provider_name))
-        else:
+                    """.format(credentials['tw'].provider_name))
+
+        if user_id['tw'] == None and user_id['fb'] == None:
             # self.redirect('/')
             template = jinja_environment.get_template('templates/login.html')
             self.response.write(template.render())
             return
-        logging.info("PROVIDER NAME IS: %s", credentials[provider_name].provider_name)
 
             #TWITTER & FACEBOOK -----------------------------
-        provider_names = {}
-        result = {}
+        if 'tw' in credentials:
+            provider_says = 'Twitter'
+            if 'fb' in credentials:
+                provider_says = 'Twitter and Facebook'
+        elif 'fb' in credentials:
+            provider_says = 'Facebook'
+            if 'tw' in credentials:
+                provider_says = 'Facebook and Twitter'
+        else:
+            provider_says = 'NULL'
         serialized_credentials = {}
-        user_id = {}
-        provider_names[provider_name] = credentials[provider_name].provider_name
-        logging.info("action handler got provider_name %s", provider_names[provider_name])
-        result[provider_name] = authomatic.login(Webapp2Adapter(self), provider_names[provider_name])
-        logging.info('RESULT IS: %s' % result[provider_name])
-        serialized_credentials[provider_name] = self.request.cookies.get(str(provider_name) + '_credentials')
-        user_id[provider_name] = self.request.cookies.get(str(provider_name) + '_user_id')
-        response = {}
-        response[provider_name] = authomatic.access(serialized_credentials[provider_name],
-                                     url='https://api.twitter.com/1.1/statuses/home_timeline.json',
-                                     method='GET')
-        logging.info('RESPONSE IS: %s' % response[provider_name])
+        # user_id = {}
+        # logging.info("action handler got provider_name %s", provider_names[provider_name])
+        logging.info('RESULT IS: %s' % result)
+        serialized_credentials['tw'] = self.request.cookies.get('tw_credentials')
+        serialized_credentials['fb'] = self.request.cookies.get('fb_credentials')
         tweets = []
         fstatuses = []
-        if result[provider_name]:
-            # If there is result, the login procedure is over and we can write to response.
-            self.response.write('<a href="..">Home</a>')
+        logging.info("RESULT FOR BOTH IS: %s", result)
 
-            if result[provider_name].error:
-                # Login procedure finished with an error.
-                self.response.write(u'<h2>Damn that error: {}</h2>'.format(result[provider_name].error.message))
-
-
-            elif result[provider_name].user:
-                # Hooray, we have the user!
-
-                # OAuth 2.0 and OAuth 1.0a provide only limited user data on login,
-                # We need to update the user to get more info.
-                if not (result[provider_name].user.name and result[provider_name].user.id):
-                    result[provider_name].user.update()
-
-                # Welcome the user.
-                # self.response.write(u'<h1>Hi {}</h1>'.format(result.user.name))
-                # self.response.write(u'<h2>Your id is: {}</h2>'.format(result.user.id))
-                # self.response.write(u'<h2>Your email is: {}</h2>'.format(result.user.email))
-                logging.info('CREDENTIALS ARE: %s' % result[provider_name].user.credentials)
-                credentials[provider_name] = result[provider_name].user.credentials
-                logging.info('CREDENTIALS VARIABLE VALUE IS: %s' % credentials[provider_name])
-                # self.response.set_cookie('credentials', credentials)
-
+        if result['tw'] or result['fb']:
                     # FACEBOOK PRINT STATUSES ---------------
-                if 'fb' in result:
-                    urlf = 'https://graph.facebook.com/{}?fields=feed.limit(10)'
-                    urlf = urlf.format(result['fb'].user.id)
-                    logging.info("FACEBOOK USER ID IS: %s" % result['fb'].user.id)
+            if result['fb']:
+                credentials['fb'] = result['fb'].user.credentials
+                logging.info('USER FB CREDENTIALS ARE: %s' % result['fb'].user.credentials)
+                urlf = 'https://graph.facebook.com/{}?fields=feed.limit(10)'
+                urlf = urlf.format(result['fb'].user.id)
+                logging.info("FACEBOOK USER ID IS: %s" % result['fb'].user.id)
 
-                    # Access user's protected resource.
-                    fbresponse = result['fb'].provider.access(urlf)
-                    logging.info(fbresponse)
-                    if fbresponse.status == 200:
-                        # Parse response.
-                        statuses = fbresponse.data.get('feed').get('data')
-                        error = fbresponse.data.get('error')
-                        if error:
-                            self.response.write(u'Damn that error: {}!'.format(error))
-                        elif statuses:
-                            fstatuses = []
-                            for message in statuses:
-                                s = {}
-                                logging.info("MESSAGE FOR FACEBOOK IS: %s", message)
-                                text = message.get('message')
-                                if text == None:
-                                    text = message.get('story')
-                                s['text'] = text
-                                s['date'] = message.get('created_time')
-                                fstatuses.append(s)
+                # Access user's protected resource.
+                fbresponse = result['fb'].provider.access(urlf)
 
-                                # text = message.get('message')
-                                # date = message.get('created_time')
-                    else:
-                        self.response.write('Damn that unknown error!<br />')
-                        self.response.write(u'Status: {}'.format(response.status))
-
-
-                # TWITER PRINT TWEETS -------------------------
-                urlt = 'https://api.twitter.com/1.1/statuses/home_timeline.json'
-                if 'tw' in result:
-                    # You can pass a dictionary of querystring parameters.
-                    twresponse = result['tw'].provider.access(urlt, {'count': 10})
-                    logging.info('TWITTER RESPONSE IS: %s' % twresponse)
-
+                if fbresponse.status == 200:
                     # Parse response.
-                    if twresponse.status == 200:
-                        logging.info('RESPONSE STATUS IS A-OKAY!')
-                        if type(twresponse.data) is list:
-                            # Twitter returns the tweets as a JSON list.
-                            # self.response.write('Your 5 most recent tweets:')
-                            # logging.info('RESPONSE DATA IS: %s' % response.data)
-                            tweets = []
-                            for tweet in twresponse.data:
-                                t = {}
-                                t['text'] = tweet.get('text')
-                                t['date'] = tweet.get('created_at')
-                                t['name'] = tweet.get('user').get('name')
-                                # t['media'] = tweet.get('mediaurl')
-                                # logging.info('MEDIA URL IS: %s' % media)
-                                t['handle'] = tweet.get('user').get('screen_name')
+                    statuses = fbresponse.data.get('feed').get('data')
+                    error = fbresponse.data.get('error')
 
-                                tweets.append(t)
+                    if error:
+                        self.response.write(u'Oh that error: {}!'.format(error))
+                    elif statuses:
+                        fstatuses = []
+                        for message in statuses:
+                            s = {}
+                            logging.info("MESSAGE FOR FACEBOOK IS: %s", message)
+                            text = message.get('message')
+                            if text == None:
+                                text = message.get('story')
+                            s['text'] = text
+                            s['date'] = message.get('created_time')
+                            fstatuses.append(s)
 
-                                # self.response.write(format(name, handle))
-                                # self.response.write(format(text.replace(u'\u2013', '[???]')))
-                                # self.response.write(format(date))
+                            # text = message.get('message')
+                            # date = message.get('created_time')
+                else:
+                    self.response.write('Oh that unknown error!<br />')
+                    self.response.write(u'Status: {}'.format(response.status))
 
-                                #PUT THESE THREE ENTIRES IN A DICT SO THAT YOU CAN PRINT IT OUT IN HTML
+                logging.info('CREDENTIALS FACEBOOK VARIABLE VALUE IS: %s' % credentials['fb'])
 
-                        elif twresponse.data.get('errors'):
-                            self.response.write(u'Damn that error: {}!'.\
-                                                format(response.data.get('errors')))
-                    else:
-                        self.response.write('Damn that unknown error!<br />')
-                        self.response.write(u'Status: {}'.format(twresponse.status))
+            # TWITER PRINT TWEETS -------------------------
+            if result['tw']:
+                response['tw'] = authomatic.access(serialized_credentials['tw'],
+                                             url='https://api.twitter.com/1.1/statuses/home_timeline.json',
+                                             method='GET')
+                urlt = 'https://api.twitter.com/1.1/statuses/home_timeline.json'
+                # logging.info('USER TW CREDENTIALS ARE: %s' % result['tw'].user.credentials)
+                credentials['tw'] = result['tw'].user.credentials
+                # You can pass a dictionary of querystring parameters.
+                twresponse = result['tw'].provider.access(urlt, {'count': 10})
+                logging.info('TWITTER RESPONSE IS: %s' % twresponse)
 
+                # Parse response.
+                if twresponse.status == 200:
+                    logging.info('RESPONSE STATUS IS A-OKAY!')
+                    if type(twresponse.data) is list:
+                        # Twitter returns the tweets as a JSON list.
+                        # self.response.write('Your 5 most recent tweets:')
+                        # logging.info('RESPONSE DATA IS: %s' % response.data)
+                        tweets = []
+                        for tweet in twresponse.data:
+                            t = {}
+                            t['text'] = tweet.get('text')
+                            t['date'] = tweet.get('created_at')
+                            t['name'] = tweet.get('user').get('name')
+                            # t['media'] = tweet.get('mediaurl')
+                            # logging.info('MEDIA URL IS: %s' % media)
+                            t['handle'] = tweet.get('user').get('screen_name')
+
+                            tweets.append(t)
+
+                            # self.response.write(format(name, handle))
+                            # self.response.write(format(text.replace(u'\u2013', '[???]')))
+                            # self.response.write(format(date))
+
+                            #PUT THESE THREE ENTIRES IN A DICT SO THAT YOU CAN PRINT IT OUT IN HTML
+
+                    elif twresponse.data.get('errors'):
+                        self.response.write(u'Oh that error: {}!'.\
+                                            format(response.data.get('errors')))
+                else:
+                    self.response.write('Oh that unknown error!<br />')
+                    self.response.write(u'Status: {}'.format(twresponse.status))
+                logging.info('CREDENTIALS TWITTER VARIABLE VALUE IS: %s' % credentials['tw'])
 
 
             # NEWS ------------------------------
@@ -286,10 +318,21 @@ class Home(webapp2.RequestHandler):
         nyt_json_content = nyt_data_source.content
         parsed_nyt_dictionary = json.loads(nyt_json_content)
 
-        logging.info('STATUSES ARE: %s', fstatuses)
+        logging.info('FACEBOOK STATUSES ARE: %s', fstatuses)
 
             # RENDER THE TEMPLATE ------------------
-
+        template = jinja_environment.get_template('templates/mainpage.html')
+        self.response.write(template.render({
+                                            'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
+                                            'name' : format(user_name[provider_name]),
+                                            'provider' : provider_says,
+                                            'providerslug' : format(credentials[provider_name].provider_name),
+                                            'tweets' : tweets,
+                                            'statuses' : fstatuses,
+                                        }))
+    def post(self):
+        search_term = str(self.request.get('search_term')).replace(' ', '+')
+        logging.warning(search_term)
 
 
         search_term = self.request.get('search_term')
@@ -313,7 +356,7 @@ class Home(webapp2.RequestHandler):
         self.response.write(template.render({
                                             'articles' : get_article_info(parsed_nyt_dictionary['response']['docs']),
                                             'name' : format(user_name[provider_name]),
-                                            'provider' : format(dict(fb='Facebook', tw='Twitter')[credentials[provider_name].provider_name]),
+                                            'provider' : provider_says,
                                             'providerslug' : format(credentials[provider_name].provider_name),
                                             'tweets' : tweets,
                                             'statuses' : fstatuses
@@ -374,7 +417,7 @@ class Refresh(webapp2.RequestHandler):
 #
 #             if result.error:
 #                 # Login procedure finished with an error.
-#                 self.response.write(u'<h2>Damn that error: {}</h2>'.format(result.error.message))
+#                 self.response.write(u'<h2>Oh that error: {}</h2>'.format(result.error.message))
 #
 #
 #             elif result.user:
@@ -419,7 +462,7 @@ class Refresh(webapp2.RequestHandler):
 #                             error = response.data.get('error')
 #
 #                             if error:
-#                                 self.response.write(u'Damn that error: {}!'.format(error))
+#                                 self.response.write(u'Oh that error: {}!'.format(error))
 #                             elif statuses:
 #                                 self.response.write('Your 10 most recent statuses:<br />')
 #                                 for message in statuses:
@@ -430,7 +473,7 @@ class Refresh(webapp2.RequestHandler):
 #                                     self.response.write(u'<h3>{}</h3>'.format(text))
 #                                     self.response.write(u'Posted on: {}'.format(date))
 #                         else:
-#                             self.response.write('Damn that unknown error!<br />')
+#                             self.response.write('Oh that unknown error!<br />')
 #                             self.response.write(u'Status: {}'.format(response.status))
 #
 #                     if result.provider.name == 'tw':
@@ -463,10 +506,10 @@ class Refresh(webapp2.RequestHandler):
 #                                     self.response.write(u'Tweeted on: {}'.format(date))
 #
 #                             elif response.data.get('errors'):
-#                                 self.response.write(u'Damn that error: {}!'.\
+#                                 self.response.write(u'Oh that error: {}!'.\
 #                                                     format(response.data.get('errors')))
 #                         else:
-#                             self.response.write('Damn that unknown error!<br />')
+#                             self.response.write('Oh that unknown error!<br />')
 #                             self.response.write(u'Status: {}'.format(response.status))
 #
 #                     if result.provider.name == 'go':
@@ -494,12 +537,12 @@ class Refresh(webapp2.RequestHandler):
     #         error = response.data.get('error')
     #
     #         if error:
-    #             self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+    #             self.response.write('<p>Oh that error: {0}!</p>'.format(error))
     #         elif post_id:
     #             self.response.write('<p>You just posted a status with id ' + \
     #                                 '{0} to your Facebook timeline.<p/>'.format(post_id))
     #         else:
-    #             self.response.write('<p>Damn that unknown error! Status code: {0}</p>'\
+    #             self.response.write('<p>Oh that unknown error! Status code: {0}</p>'\
     #                                 .format(response.status))
     #
     #     elif provider_name == 'tw':
@@ -513,7 +556,7 @@ class Refresh(webapp2.RequestHandler):
     #         tweet_id = response.data.get('id')
     #
     #         if error:
-    #             self.response.write('<p>Damn that error: {0}!</p>'.format(error))
+    #             self.response.write('<p>Oh that error: {0}!</p>'.format(error))
     #         elif tweet_id:
     #             self.response.write("""
     #             <p>
@@ -523,7 +566,7 @@ class Refresh(webapp2.RequestHandler):
     #         else:
     #             self.response.write("""
     #             <p>
-    #                 Damn that unknown error! Status code: {0}
+    #                 Oh that unknown error! Status code: {0}
     #             </p>
     #             """.format(response.status))
     #
