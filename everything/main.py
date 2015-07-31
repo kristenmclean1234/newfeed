@@ -304,7 +304,6 @@ class Home(webapp2.RequestHandler):
                                             'providerslug' : format(credentials.provider_name),
                                             'tweets' : tweets,
                                             'statuses' : fstatuses
-
                                         }))
 
 class Refresh(webapp2.RequestHandler):

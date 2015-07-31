@@ -34,11 +34,28 @@
     </article><br><br>
     </div>
     <div class='allpost'>
-        <ul class='FacebookPost'>
-        {% for status in statuses %}
-        <div class = "post fbp"><h2>{{status['text']}}</h2><br>
-          Posted on {{status['date']}}</div>
-        {% endfor %} </ul>
+        {%for i in range (0,10)%}
+          {%if statuses|length > 0%}
+            <ul class='FacebookPost'>
+            <div class = "post fbp"><h2>{{statuses[i]['text']}}</h2><br>
+              Posted on {{statuses[i]['date']}}</div>
+            </ul>
+          {%endif%}
+
+          {%if tweets|length > 0%}
+            <div class = "post twp">
+              <h1>{{tweets[i]['name']}} <i>@{{tweets[i]['handle']}}</i></h1><br>
+              <h2>{{tweets[i]['text']}}</h2><br>
+              Posted on {{tweets[i]['date']}}
+            </div></ul>
+          {%endif%}
+
+          <ul class='NewsPost'>
+            <div class = "post np">
+                <a href="{{articles[i]['web_url']}}" ><h1>{{articles[i]['headline']}}</h1></a>
+                <h2>{{articles[i]['lead_paragraph']}}</h2>
+            </div></ul>
+        {% endfor %}
 
         <ul class='TwitterPost'>
           <div class='post twp'>
@@ -56,21 +73,6 @@
             <h2> Airports are hubs for human trafficking. Here are 7 warning signs you can look out for: cnn.it/1lu5iel</h2><br>
             Posted on July 30, 2015 12:45 pm
           </div>
-        {% for tweet in tweets %}
-          <div class = "post twp">
-            <h1>{{tweet['name']}} <i>@{{tweet['handle']}}</i></h1><br>
-            <h2>{{tweet['text']}}</h2><br>
-            Posted on {{tweet['date']}}
-          </div>
-        {% endfor %} </ul>
-
-        <ul class='NewsPost'>
-        {% for art in articles %}
-          <div class = "post np">
-              <a href="{{art['web_url']}}"><h1>{{art['headline']}}</h1></a>
-              <h2>{{art['lead_paragraph']}}</h2>
-          </div>
-        {% endfor %} </ul>
 
       <br><br><br><br>
     </div>
