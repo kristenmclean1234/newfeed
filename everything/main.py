@@ -529,7 +529,9 @@ class Logout(webapp2.RequestHandler):
         self.response.delete_cookie('fb_credentials')
         self.response.delete_cookie('tw_user_id')
         self.response.delete_cookie('tw_user_name')
-        self.response.delete_cookie('tw_credentials')
+        self.response.delete_cookie('credentials')
+        self.response.delete_cookie('user_id')
+        self.response.delete_cookie('user_name')
 
         # Redirect home.
         self.redirect('./')
