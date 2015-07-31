@@ -35,14 +35,14 @@
     </div>
     <div class='allpost'>
         {%for i in range (0,10)%}
-          {%if statuses|length > 0%}
+          {%if i < statuses|length%}
             <ul class='FacebookPost'>
             <div class = "post fbp"><h2>{{statuses[i]['text']}}</h2><br>
               Posted on {{statuses[i]['date']}}</div>
             </ul>
           {%endif%}
 
-          {%if tweets|length > 0%}
+          {%if i < tweets|length%}
             <div class = "post twp">
               <h1>{{tweets[i]['name']}} <i>@{{tweets[i]['handle']}}</i></h1><br>
               <h2>{{tweets[i]['text']}}</h2><br>
@@ -52,7 +52,7 @@
 
           <ul class='NewsPost'>
             <div class = "post np">
-                <a href="{{articles[i]['web_url']}}" ><h1>{{articles[i]['headline']}}</h1></a>
+                <a href="{{articles[i]['web_url']}}" target = "_blank"><h1>{{articles[i]['headline']}}</h1></a>
                 <h2>{{articles[i]['lead_paragraph']}}</h2>
             </div></ul>
         {% endfor %}

@@ -201,7 +201,6 @@ a{
   -webkit-transition:.5s;
   /* ...and now for the proper property */
   transition:.5s;
-
 }
 a:link { color: #000000; text-decoration: none}
 a:visited { color: #000000; text-decoration: none}
@@ -213,4 +212,20 @@ a:active { color: #000000; text-decoration: none}
   width: 400px;
   height: 32px;
   border-color: #3399FF;
+}
+a:link {
+  color: #000000;
+  text-decoration: none;
+}
+a:visited{
+  color: #000000;
+  text-decoration: none;
+}
+a:hover{
+    color: #39F;
+    text-decoration: none;
+}
+a:active{
+    color: #000000;
+    text-decoration: none;
 }
