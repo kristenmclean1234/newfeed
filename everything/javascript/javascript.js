@@ -1,27 +1,27 @@
 $(document).ready(function(){
     $('#searchbar').hide();
     $("#facebook").click(function(){
-        $(".TwitterPost").hide();
-        $(".NewsPost").hide();
-        $(".FacebookPost").show();
+        $(".twp").hide();
+        $(".np").hide();
+        $(".fbp").show();
         $('#searchbar').hide();
     });
     $("#twitter").click(function(){
-        $(".FacebookPost").hide();
-        $(".NewsPost").hide();
-        $(".TwitterPost").show();
+        $(".fbp").hide();
+        $(".np").hide();
+        $(".twp").show();
         $('#searchbar').hide();
     });
     $("#news").click(function(){
-        $(".FacebookPost").hide();
-        $(".TwitterPost").hide();
-        $(".NewsPost").show();
+        $(".fbp").hide();
+        $(".twp").hide();
+        $(".np").show();
         $('#searchbar').show();
     });
     $("#home").click(function(){
-        $(".FacebookPost").show();
-        $(".TwitterPost").show();
-        $(".NewsPost").show();
+        $(".fbp").show();
+        $(".twp").show();
+        $(".np").show();
         $('#searchbar').hide();
     });
 });
